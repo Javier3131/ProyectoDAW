@@ -21,6 +21,7 @@ exports.create = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
+			console.log("Guarda el articulo");
 			res.json(article);
 		}
 	});
