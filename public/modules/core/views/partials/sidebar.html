@@ -1,4 +1,4 @@
-<!-- Inline template with sidebar items markup and ng-directives-->
+ Inline template with sidebar items markup and ng-directives-->
 <script type="text/ng-template" id="sidebar-renderer.html">
   <span ng-if="item.heading">{{(item.translate | translate) || item.title}}</span>
   <a href="" title="{{item.title}}" ng-if="item.items.length">
@@ -33,6 +33,8 @@
          <li class="has-user-block">
             <div uib-collapse="userBlockVisible" ng-controller="UserBlockController">
                <div class="item user-block">
+                  
+
                   <!-- User picture-->
                   <div class="user-block-picture">
                      <div class="user-block-status">
@@ -40,11 +42,22 @@
                         <div class="circle circle-success circle-lg"></div>
                      </div>
                   </div>
+                  
+
+                  <!-- Funcional, escrito por el template-->
                   <!-- Name and Job-->
-                  <div class="user-block-info">
+                  <!-- <div class="user-block-info">
                      <span class="user-block-name">{{ 'sidebar.WELCOME' | translate }} {{user.name}}</span>
                      <span class="user-block-role">{{user.job}}</span>
+                  </div> -->
+
+                  <!-- Editado por Javier -->
+                  <div class="user-block-info" data-ng-show="authentication.user">
+                     <!-- <span class="user-block-name">{{ 'sidebar.WELCOME' | translate }} {{user.name}}</span> -->
+                     <span data-ng-bind="authentication.user.displayName"></span>
+                     <span class="user-block-role">Desarrollador</span>
                   </div>
+
                </div>
             </div>
          </li>
@@ -61,4 +74,4 @@
       <!-- END sidebar nav-->
    </nav>
 </div>
-<!-- END Sidebar (left)-->
+<!-- END Sidebar (left)
