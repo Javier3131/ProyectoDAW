@@ -111,7 +111,9 @@
     "angular-knob": "~0.0.2",
     "jquery.easy-pie-chart": "~2.1.6",
     "angular-bootstrap-colorpicker": "~3.0.18",
-    "matchMedia": "matchmedia#~0.2.0"
+    "matchMedia": "matchmedia#~0.2.0",
+    "ng-file-upload": "^12.0.1",
+    "ng-file-upload-shim": "^12.0.1"
   },
   "resolutions": {
     "angular": "1.4.7",

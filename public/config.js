@@ -18,7 +18,12 @@ var ApplicationConfiguration = (function() {
 												 'ngSanitize',
 												 'ngResource',
 												 'ui.utils',
-                                                 'tmh.dynamicLocale'
+                                                 'tmh.dynamicLocale',
+                                                 //Javier - Agregando dependencia
+                                                 'angularFileUpload'
+
+                                                 //Esta pueda ser la version mas reciente
+                                                  // 'ngFileUpload'
 												];
 	// Add a new vertical module
 	var registerModule = function(moduleName, dependencies) {

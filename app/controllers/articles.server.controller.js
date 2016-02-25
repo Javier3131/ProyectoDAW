@@ -6,10 +6,15 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Article = mongoose.model('Article'),
-	_ = require('lodash');
+	_ = require('lodash'),
+	multiparty = require('multiparty'),
+	uuid = require('uuid'),
+	// Agregando funcion bajada de stackoverflow 
+	fs = require('fs');
+	// Agregando funcion bajada de stackoverflow 
 
 /**
- * Create a article
+ * Create a article, propio del template
  */
 exports.create = function(req, res) {
 	var article = new Article(req.body);
@@ -26,6 +31,61 @@ exports.create = function(req, res) {
 		}
 	});
 };
+
+
+
+/**
+ * Create a article with Upload, Agregando funcion bajada de stackoverflow
+ */
+exports.createWithUpload = function(req, res) {
+
+    var form = new multiparty.Form();
+    form.parse(req, function(err, fields, files) {
+
+        var file = req.files.file;
+        console.log(file.name);
+        console.log(file.type);
+        console.log(file.path);
+        console.log(req.body.article);
+
+        var art = JSON.parse(req.body.article);
+        var article = new Article(art);
+        article.user = req.user;
+        var tmpPath = file.path;
+        var extIndex = tmpPath.lastIndexOf('.');
+        var extension = (extIndex < 0) ? '' : tmpPath.substr(extIndex);
+        var fileName = uuid.v4() + extension;
+        var destPath = './public/uploads/' + fileName;
+
+        article.image = '/uploads/' + fileName;
+
+        var is = fs.createReadStream(tmpPath);
+        var os = fs.createWriteStream(destPath);
+
+        if(is.pipe(os)) {
+            fs.unlink(tmpPath, function (err) { //To unlink the file from temp path after copy
+                if (err) {
+                    console.log(err);
+                }
+            });
+            article.save(function(err) {
+                if (err) {
+                    return res.status(400).send({
+                        message: errorHandler.getErrorMessage(err)
+                    });
+                } else {
+                    res.jsonp(article);
+                    console.log("Exitoso createWithUpload");
+                }
+            });
+        } else
+            return res.json('File not uploaded');
+    });
+
+};
+
+// Agregando funcion bajada de stackoverflow
+
 
 /**
  * Show the current article

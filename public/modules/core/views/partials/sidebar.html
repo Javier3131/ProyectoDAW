@@ -36,12 +36,12 @@
                   
 
                   <!-- User picture-->
-                  <div class="user-block-picture">
+                  <!-- <div class="user-block-picture">
                      <div class="user-block-status">
                         <img ng-src="{{user.picture}}" alt="Avatar" class="img-thumbnail img-circle" />
                         <div class="circle circle-success circle-lg"></div>
                      </div>
-                  </div>
+                  </div> -->
                   
 
                   <!-- Funcional, escrito por el template-->
@@ -52,6 +52,10 @@
                   </div> -->
 
                   <!-- Editado por Javier -->
+                  <div class="user-block-picture">
+                    <img ng-src="{{authentication.user.profileImageURL}}" alt="{{authentication.user.displayName}}" class="img-thumbnail img-circle" />
+                    <div class="circle circle-success circle-lg"></div>
+                  </div>
                   <div class="user-block-info" data-ng-show="authentication.user">
                      <!-- <span class="user-block-name">{{ 'sidebar.WELCOME' | translate }} {{user.name}}</span> -->
                      <span data-ng-bind="authentication.user.displayName"></span>
