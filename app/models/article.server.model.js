@@ -25,6 +25,12 @@ var ArticleSchema = new Schema({
 		default: '',
 		trim: true
 	},
+
+	image: {
+    type: String,
+    default: 'modules/core/img/bg4.jpg'
+	},
+	
 	user: {
 		type: Schema.ObjectId,
 		ref: 'User'

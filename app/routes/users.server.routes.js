@@ -13,6 +13,10 @@ module.exports = function(app) {
 	app.route('/users/me').get(users.me);
 	app.route('/users').put(users.update);
 	app.route('/users/accounts').delete(users.removeOAuthProvider);
+	// Javier - Agregando route para cambiar imagen de perfil
+	app.route('/users/picture').post(users.changeProfilePicture);
+	
+	// app.route('/users/picture').post(users.changeProfilePicture);
 
 	// Setting up the users password api
 	app.route('/users/password').post(users.changePassword);
