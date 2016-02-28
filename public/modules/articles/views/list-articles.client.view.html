@@ -32,7 +32,7 @@
 		<!-- <img ng-src="{{article.image}}"  class="img-thumbnail user-profile-picture"> -->
 		
 		<div class="panel-body" data-ng-repeat="article in articles" data-ng-href="#!/articles/{{article._id}}" >
-			<img  ng-src="{{article.image}}"  class="img-thumbnail user-profile-picture">
+			<img  width:"auto" ng-src="{{article.image}}"  class="img-thumbnail user-profile-picture" style="width:100%">	
 			<p class="clearfix">
 				<span class="pull-left">
 					<small class="mr-sm">
@@ -49,13 +49,13 @@
 					</small>
 				</span>
 			</p>
-			<h4>
-				{{article.user.displayName}}
-			</h4>
+			<h2>
+				{{article.title}}
+			</h2>
 			<p>
 				{{article.content}}
 			</p>
-
+			</br>
 			<div role="group"  class="btn-group">
 				<a  data-ng-href="http://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost:3000/#!/articles/{{article._id}}" type="button" class="btn btn-default">
 					<em class="fa fa-facebook text-muted"></em>
@@ -73,10 +73,8 @@
 					<em class="fa fa-share-alt text-muted"></em>
 				</a>
 			</div>
-			</br> 
 			<hr>
-			</br>
-			<div class="container">
+			<div class="panel-body">
 				<div class="media">
 					<div class="media-left">
 						<a href="#">
@@ -128,6 +126,7 @@
 					</div>
 				</div>
 			</div>
+			<hr>
 		</div>
 	</div>
 

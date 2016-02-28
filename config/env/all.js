@@ -48,10 +48,10 @@ module.exports = {
                 'public/lib/matchMedia/matchMedia.js',
                 
                 //Javier - Agregando la libreria a utilizar
-                'public/lib/angular-file-upload/angular-file-upload.js'
-             //    'public/lib/ng-file-upload/FileAPI.min.js', 
-	            // 'public/lib/ng-file-upload/angular-file-upload-shim.min.js', 
-	            // 'public/lib/ng-file-upload/angular-file-upload.min.js'
+                'public/lib/angular-file-upload/angular-file-upload.js',
+                'public/lib/ng-file-upload/FileAPI.min.js', 
+	            'public/lib/ng-file-upload/angular-file-upload-shim.min.js', 
+	            'public/lib/ng-file-upload/angular-file-upload.min.js'
 	            //Javier - Agregando la libreria a utilizar
 
 
