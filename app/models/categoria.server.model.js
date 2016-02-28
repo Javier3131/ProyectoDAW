@@ -24,7 +24,7 @@ var CategoriaSchema = new Schema({
 		type: String,
 		default: '',
 		trim: true
-	}
+	},
 	
 	user: {
 		type: Schema.ObjectId,
