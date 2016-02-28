@@ -51,13 +51,19 @@
 					</small>
 				</span>
 			</p>
-			<h2>
-				{{article.title}}
-			</h2>
+			
+			<a data-ng-href="#!/articles/{{article._id}}">
+				<h2>
+					{{article.title}}
+				</h2>
+			</a>
+			
 			<p>
 				{{article.content}}
 			</p>
 			</br>
+
+			<!-- Inician Butones para social media -->
 			<div role="group"  class="btn-group">
 				<a  data-ng-href="http://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost:3000/#!/articles/{{article._id}}" type="button" class="btn btn-default">
 					<em class="fa fa-facebook text-muted"></em>
@@ -75,7 +81,11 @@
 					<em class="fa fa-share-alt text-muted"></em>
 				</a>
 			</div>
+			<!-- Terminan Butones para social media -->
+
 			<hr>
+			
+			<!-- Inician comentarios -->
 			<div class="panel-body">
 				<div class="media">
 					<div class="media-left">
@@ -128,6 +138,8 @@
 					</div>
 				</div>
 			</div>
+			<!-- Terminan comentarios -->
+
 			<hr>
 		</div>
 	</div>
