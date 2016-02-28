@@ -8,23 +8,23 @@ angular.module('categoria').config(['$stateProvider',
 		state('app.listCategoria', {
 			url: '/categoria',
 			title: 'List Categoria',
-			templateUrl: 'modules/categoria/views/list-articles.client.view.html'
+			templateUrl: 'modules/categoria/views/list-categoria.client.view.html'
 		}).
 		state('app.createCategoria', {
 			url: '/categoria/create',
 			title: 'New Categoria',
-			templateUrl: 'modules/categoria/views/create-article.client.view.html'
+			templateUrl: 'modules/categoria/views/create-categoria.client.view.html'
 		}).
 		state('app.viewCategoria', {
 			url: '/categoria/:categoriaId',
 			title: 'View Categoria',
-			templateUrl: 'modules/categoria/views/view-article.client.view.html',
+			templateUrl: 'modules/categoria/views/view-categoria.client.view.html',
 			controller: 'CategoriaController'
 		}).
 		state('app.editCategoria', {
 			title: 'Edit Categoria',
 			url: '/categoria/:categoriaId/edit',
-			templateUrl: 'modules/categoria/views/edit-article.client.view.html'
+			templateUrl: 'modules/categoria/views/edit-categoria.client.view.html'
 		});
 	}
 ]);

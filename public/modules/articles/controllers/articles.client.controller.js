@@ -1,8 +1,8 @@
 'use strict';
 
 //Original del template.
-angular.module('articles').controller('ArticlesController', ['$scope', '$stateParams', '$timeout', '$window','$location', 'Authentication', 'Articles', 'FileUploader',
-	function($scope, $stateParams, $timeout,  $window, $location, Authentication, Articles, FileUploader) {
+angular.module('articles').controller('ArticlesController', ['$scope', '$stateParams', '$timeout', '$window','$location', 'Authentication', 'Articles', 'FileUploader','Categoria',
+	function($scope, $stateParams, $timeout,  $window, $location, Authentication, Articles, FileUploader, Categoria) {
 
 		$scope.authentication = Authentication;
 
@@ -55,6 +55,18 @@ angular.module('articles').controller('ArticlesController', ['$scope', '$statePa
 			});
 		};
 
+		//Agregando funcionalidad de categorias Javier 
+	    $scope.findCat = function() {
+			$scope.categoria = Categoria.query();
+		};
+
+		$scope.findOneCat = function() {
+			$scope.categoria = Categoria.get({
+				categoriaId: $stateParams.categoriaId
+			});
+		};
+
+
 
 		// Called after the user selected a new picture file
 	    $scope.uploader.onAfterAddingFile = function (fileItem) {
@@ -65,7 +77,9 @@ angular.module('articles').controller('ArticlesController', ['$scope', '$statePa
 	        fileReader.onload = function (fileReaderEvent) {
 	          $timeout(function () {
 	            $scope.imageURL = fileReaderEvent.target.result;
-	            console.log('$scope.imageURL ' + $scope.imageURL)
+	            console.log('$scope.imageURL ' + $scope.imageURL);
+
+	            $scope.findCat();
 
 	          }, 0);
 	        };
@@ -81,5 +95,8 @@ angular.module('articles').controller('ArticlesController', ['$scope', '$statePa
 	      // Start upload
 	      $scope.uploader.uploadAll();
 	    };
+
+
+	    
 	}
 ]);

@@ -1,0 +1,41 @@
+<h3>Edit Categoria
+	<ul class="breadcrumb">
+	  <li><a ui-sref="app.home">Home</a>
+	  </li>
+	  <li ng-repeat="state in $state.$current.path" ng-switch="$last" ng-if="!state.abstract" ng-class="{active: $last}"><a ng-switch-when="false" href="#{{state.url.format($stateParams)}}">{{state.title}}</a>
+	     <span ng-switch-when="true">{{state.title}}</span>
+	  </li>
+	</ul>
+</h3>
+<section data-ng-controller="CategoriaController" data-ng-init="findOne()">
+	<div class="col-md-12">
+		<form name="categoriaForm" class="form-horizontal" data-ng-submit="update(categoriaForm.$valid)" novalidate>
+			<fieldset>
+				<div class="form-group" ng-class="{ 'has-error' : submitted && categoriaForm.title.$invalid}">
+					<label class="control-label" for="title">Title</label>
+					<div class="controls">
+						<input name="title" type="text" data-ng-model="categoria.title" id="title" class="form-control" placeholder="Title" required>
+					</div>
+					<div ng-show="submitted && categoriaForm.title.$invalid" class="help-block">
+						<p ng-show="categoriaForm.title.$error.required" class="text-danger">Title is required</p>
+					</div>
+				</div>
+				<div class="form-group" ng-class="{ 'has-error' : submitted && categoriaForm.content.$invalid}">
+					<label class="control-label" for="content">Content</label>
+					<div class="controls">
+						<textarea name="content" data-ng-model="categoria.content" id="content" class="form-control" cols="30" rows="10" placeholder="Content" required></textarea>
+					</div>
+					<div ng-show="submitted && categoriaForm.content.$invalid" class="help-block">
+						<p ng-show="categoriaForm.content.$error.required" class="text-danger">Content is required</p>
+					</div>
+				</div>
+				<div class="form-group mt">
+					<input type="submit" value="Update" class="btn btn-default">
+				</div>
+				<div data-ng-show="error" class="text-danger">
+					<strong data-ng-bind="error"></strong>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+</section>

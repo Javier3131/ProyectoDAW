@@ -10,8 +10,9 @@ var mongoose = require('mongoose'),
 	multiparty = require('multiparty'),
 	uuid = require('uuid'),
 	// Agregando funcion bajada de stackoverflow 
-	fs = require('fs');
+	fs = require('fs'),
 	// Agregando funcion bajada de stackoverflow 
+	Categoria = mongoose.model('Categoria');
 
 /**
  * Create a article, propio del template
@@ -167,4 +168,18 @@ exports.hasAuthorization = function(req, res, next) {
 		});
 	}
 	next();
+};
+
+
+//Javier - Agregando Funcionalidad de categorias a los articulos
+exports.listCat = function(req, res) {
+	Categoria.find().sort('-created').populate('user', 'displayName').exec(function(err, categoria) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.json(categoria);
+		}
+	});
 };

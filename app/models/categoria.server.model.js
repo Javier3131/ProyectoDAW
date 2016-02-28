@@ -6,9 +6,7 @@
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema;
 
-/**
- * Article Schema
- */
+
 var CategoriaSchema = new Schema({
 	created: {
 		type: Date,
