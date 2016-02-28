@@ -13,18 +13,15 @@ var DiscussSchema = new Schema({
 	comment: {
 		type: String,
 		default: '',
-		trim: true
+		trim: true,
 		required: 'Comentario no puede estar vacio'
 	},
 	
 	user: {
 		type: Schema.ObjectId,
 		ref: 'User'
-	}
-	user: {
-		type: Schema.ObjectId,
-		ref: 'User'
-	}
+	},
+	
 	article: {
 		type: Schema.ObjectId,
 		ref: 'article'
