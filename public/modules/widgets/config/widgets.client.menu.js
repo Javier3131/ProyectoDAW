@@ -8,7 +8,7 @@
     coreMenu.$inject = ['Menus'];
     function coreMenu(Menus){
 
-        Menus.addMenuItem('sidebar', 'Widgets', 'widgets', null, '/widgets', true, null, 2, 'icon-grid');
+        // Menus.addMenuItem('sidebar', 'Widgets', 'widgets', null, '/widgets', true, null, 2, 'icon-grid');
 
     }
 
