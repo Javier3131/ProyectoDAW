@@ -28,9 +28,7 @@
 
 	<!-- Empieza la modificacion del post -->
 	<div class="panel">
-		
-			<!-- <img ng-src="{{article.image}}"  class="img-thumbnail user-profile-picture"> -->
-		
+
 			<div class="panel-body" data-ng-repeat="article in articles" data-ng-href="#!/articles/{{article._id}}" >
 			<img  ng-src="{{article.image}}"  class="img-thumbnail user-profile-picture">
 				<p class="clearfix">
@@ -49,9 +47,14 @@
 						</small>
 					</span>
 				</p>
-				<h4>
-					{{article.user.displayName}}
-				</h4>
+				
+				<a data-ng-href="#!/articles/{{article._id}}">
+					<h4>
+						{{article.title}}
+					</h4>
+				</a>
+				
+				
 				<p>
 					{{article.content}}
 				</p>
@@ -107,6 +110,11 @@
             </div>
 
 			</div>
+
+
+
+
+
 		</a>
 	</div>
 

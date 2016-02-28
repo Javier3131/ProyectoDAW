@@ -28,7 +28,7 @@ var ArticleSchema = new Schema({
 
 	image: {
     type: String,
-    default: 'modules/core/img/bg4.jpg'
+    default: ''
 	},
 	
 	user: {
