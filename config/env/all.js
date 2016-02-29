@@ -6,7 +6,7 @@ module.exports = {
 		description: 'Bootstrap Admin Theme + Meanjs',
 		keywords: 'MongoDB, Express, AngularJS, Node.js'
 	},
-	port: process.env.PORT || 3000,
+	port: process.env.PORT || 9000,
 	templateEngine: 'swig',
 	sessionSecret: 'MEAN',
 	sessionCollection: 'sessions',
@@ -45,7 +45,21 @@ module.exports = {
 				'public/lib/angular-loading-bar/build/loading-bar.js',
 				'public/lib/jquery.browser/dist/jquery.browser.js',
                 'public/lib/angular-dynamic-locale/dist/tmhDynamicLocale.js',
-                'public/lib/matchMedia/matchMedia.js'
+                'public/lib/matchMedia/matchMedia.js',
+                
+                //Javier - Agregando la libreria a utilizar
+                'public/lib/angular-file-upload/angular-file-upload.js'
+             //    'public/lib/ng-file-upload/FileAPI.min.js', 
+	            // 'public/lib/ng-file-upload/angular-file-upload-shim.min.js', 
+	            // 'public/lib/ng-file-upload/angular-file-upload.min.js'
+	            //Javier - Agregando la libreria a utilizar
+
+
+	            //Probando otra forma http://stackoverflow.com/questions/25832660/angularjs-how-to-add-angularjs-file-upload-to-meanjs-library
+	            // 'public/lib/ng-file-upload/angular-file-upload-shim.min.js',
+             //    'public/lib/angular/angular.js',
+             //    'public/lib/ng-file-upload/angular-file-upload.min.js'
+	            
 				// 'public/lib/jquery/dist/jquery.js',
 				// 'public/lib/angular/angular.js',
 				// 'public/lib/angular-resource/angular-resource.js',

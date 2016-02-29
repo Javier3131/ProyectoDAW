@@ -62,6 +62,13 @@ var UserSchema = new Schema({
 	salt: {
 		type: String
 	},
+
+	//Javier - Agregando foto de perfil
+	profileImageURL: {
+    type: String,
+    default: 'modules/core/img/user/02.jpg'
+  	},
+  	
 	provider: {
 		type: String,
 		required: 'Provider is required'

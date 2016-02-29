@@ -40,6 +40,12 @@ angular.module('users').config(['$stateProvider',
 		state('app.accounts', {
 			url: '/settings/accounts',
 			templateUrl: 'modules/users/views/settings/social-accounts.client.view.html'
-		});
+		})
+
+		// Javier - Agregando Ruta a usar para cambiar imagen de perfil
+		.state('app.picture', {
+        url: '/settings/picture',
+        templateUrl: 'modules/users/views/settings/change-profile-picture.client.view.html'
+      	});
 	}
 ]);
