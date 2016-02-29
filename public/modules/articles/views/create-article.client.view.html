@@ -46,9 +46,9 @@
 
 
 <!-- Copiado del base de angle, propio del template -->
-<h3>New Article
+<h3>Nueva Noticia
     <ul class="breadcrumb">
-      <li><a ui-sref="app.home">Home</a>
+      <li><a ui-sref="app.home">Inicio</a>
       </li>
       <li ng-repeat="state in $state.$current.path" ng-switch="$last" ng-if="!state.abstract" ng-class="{active: $last}"><a ng-switch-when="false" href="#{{state.url.format($stateParams)}}">{{state.title}}</a>
          <span ng-switch-when="true">{{state.title}}</span>
@@ -60,19 +60,33 @@
         <form name="articleForm" class="form-horizontal" data-ng-submit="create()" novalidate>
             <fieldset>
                 <div class="form-group" ng-class="{ 'has-error': articleForm.title.$dirty && articleForm.title.$invalid }">
-                    <label class="control-label" for="title">Title</label>
+                    <label class="control-label" for="title">Titulo</label>
                     <div class="controls">
                         <input name="title" type="text" data-ng-model="title" id="title" class="form-control" placeholder="Title" required>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label" for="content">Content</label>
+                    <label class="control-label" for="content">Contenido</label>
                     <div class="controls">
                         <textarea name="content" data-ng-model="content" id="content" class="form-control" cols="30" rows="10" placeholder="Content"></textarea>
                     </div>
                 </div>
+
+                
+                <input type="file" nv-file-select uploader="uploader" /><br/>
+                
+                <div class="form-group text-center">
+                    <img ng-src="{{imageURL}}"  class="img-thumbnail user-profile-picture">
+                    <div style="margin-bottom:20px; display:block"></div>
+                </div>
+
+
+                
+
+                
+
                 <div class="form-group mt">
-                    <input type="submit" class="btn btn-default">
+                    <input type="submit" class="btn btn-default" >
                 </div>
                 <div data-ng-show="error" class="text-danger">
                     <strong data-ng-bind="error"></strong>
