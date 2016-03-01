@@ -28,37 +28,25 @@
 
                 
                 
-                    <!-- START button group-->
-                     <!-- <div uib-dropdown="dropdown" class="btn-group">
-                        <button uib-dropdown-toggle="" class="btn btn-default">fadeInDown <b class="caret"></b>
-                        </button>
-                        <ul role="menu" class="dropdown-menu animated fadeInDown">
-                           <li data-ng-repeat="categoria in categoria">
-                                <a >{{categoria.title}}</a>
-                           </li>
-                        </ul>
-                     </div> -->
-                     <!-- END button group-->
+                    
 
 
-                     <!-- START button group-->
-                     <!-- <div uib-dropdown="dropdown" class="btn-group">
-                        <button uib-dropdown-toggle="" class="btn btn-default" data-ng-repeat="categoria in categoria">fadeInDown <b class="caret"></b>
-                        </button>
-                        <ul role="menu" class="dropdown-menu animated fadeInDown">
-                           <li>
-                                <a >{{categoria.title}}</a>
-                           </li>
-                        </ul>
-                     </div> -->
-                     <!-- END button group-->
+                    <select name="repeatSelect" id="repeatSelect" ng-model="data.repeatSelect">
+                        <option ng-repeat="option in data.availableOptions" value="{{option.name}}">
+                            {{option.name}}
+                        </option>
+                    </select>
+                    <tt data-ng-model="categoria">repeatSelect = {{data.repeatSelect}}</tt><br/>
 
-                     <div>
-                         <select data-ng-repeat="categoria in categoria">
-                          <option>{{categoria.title}}</option>
-                          <!-- <option id="greet" ng-selected="selected">Greetings!</option> -->
-                        </select>
-                     </div>
+
+
+                    <!-- <select name="repeatSelect" id="repeatSelect" ng-model="categoria">
+                        <option 
+                            ng-repeat="option in categoria" value="{{option.title}}">
+                                {{option.title}}
+                        </option>
+                    </select> -->
+
                      
                 
 

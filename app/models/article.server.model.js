@@ -30,6 +30,11 @@ var ArticleSchema = new Schema({
     type: String,
     default: ''
 	},
+
+	categoria: {
+    type: String,
+    default: ''
+	},
 	
 	user: {
 		type: Schema.ObjectId,

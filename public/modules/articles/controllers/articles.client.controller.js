@@ -17,7 +17,8 @@ angular.module('articles').controller('ArticlesController', ['$scope', '$statePa
 
 				title: this.title,
 				content: this.content,
-				image: this.imageURL
+				image: this.imageURL,
+				categoria: this.categoria
 			});
 
 			
@@ -29,6 +30,7 @@ angular.module('articles').controller('ArticlesController', ['$scope', '$statePa
 				$scope.title = '';
 				$scope.content = '';
 				$scope.imageURL = '';
+				$scope.categoria = '';
 
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
@@ -66,6 +68,16 @@ angular.module('articles').controller('ArticlesController', ['$scope', '$statePa
 			});
 		};
 
+		$scope.data = {
+		    repeatSelect: null,
+		    availableOptions: [
+		      {id: '1', name: 'Accidente'},
+		      {id: '2', name: 'Secuestro'},
+		      {id: '3', name: 'Robo'},
+		      {id: '4', name: 'Asesinato'}
+		    ],
+		   };
+
 
 
 		// Called after the user selected a new picture file
@@ -78,8 +90,10 @@ angular.module('articles').controller('ArticlesController', ['$scope', '$statePa
 	          $timeout(function () {
 	            $scope.imageURL = fileReaderEvent.target.result;
 	            console.log('$scope.imageURL ' + $scope.imageURL);
+	            console.log('probando la categoria ' + this.option.id);
 
-	            $scope.findCat();
+	            $scope.findCat();//Para buscar categorias
+
 
 	          }, 0);
 	        };
