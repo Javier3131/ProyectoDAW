@@ -1,5 +1,5 @@
 'use strict';
-
+//testing
 //Original del template.
 angular.module('articles').controller('ArticlesController', ['$scope', '$stateParams', '$timeout', '$window','$location', 'Authentication', 'Articles', 'FileUploader','Categoria',
 	function($scope, $stateParams, $timeout,  $window, $location, Authentication, Articles, FileUploader, Categoria) {
