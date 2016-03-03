@@ -17,7 +17,7 @@ angular.module('comentario').controller('ComentarioController', ['$scope', '$sta
 			var comentario = new Comentario({
 
 				comment: this.comment,
-				article: this.article
+				//article: this.article
 				// image: this.imageURL
 			});
 			
