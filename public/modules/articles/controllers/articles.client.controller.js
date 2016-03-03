@@ -13,12 +13,16 @@ angular.module('articles').controller('ArticlesController', ['$scope', '$statePa
 
 		// Propio del template. angle
 		$scope.create = function() {
+
+			// console.log('categoria' + $scope.data.repeatSelect);
+
 			var article = new Articles({
 
 				title: this.title,
 				content: this.content,
 				image: this.imageURL,
-				categoria: this.categoria
+				categoria: $scope.data.repeatSelect
+				
 			});
 
 			

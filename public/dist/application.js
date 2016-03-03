@@ -18,7 +18,9 @@ var ApplicationConfiguration = (function() {
 												 'ngSanitize',
 												 'ngResource',
 												 'ui.utils',
-                                                 'tmh.dynamicLocale'
+                                                 'tmh.dynamicLocale',
+                                                 //Javier - Agregando dependencia
+                                                 'angularFileUpload'
 												];
 	// Add a new vertical module
 	var registerModule = function(moduleName, dependencies) {
@@ -67,6 +69,10 @@ ApplicationConfiguration.registerModule('app.blog', ['app.routes']);
 
 ApplicationConfiguration.registerModule('app.bootstrapui');
 
+'use strict';
+
+// Use Applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('categoria');
 'use strict';
 
 ApplicationConfiguration.registerModule('app.charts', ['app.routes']);
@@ -210,9 +216,9 @@ ApplicationConfiguration.registerModule('app.widgets');
 angular.module('articles').run(['Menus',
 	function(Menus) {
 		// Set top bar menu items
-		Menus.addMenuItem('sidebar', 'Articles', 'articles', 'dropdown', '/articles(/.*)?', false, null, 20);
-		Menus.addSubMenuItem('sidebar', 'articles', 'List Articles', 'articles');
-		Menus.addSubMenuItem('sidebar', 'articles', 'New Article', 'articles/create');
+		Menus.addMenuItem('sidebar', 'Sucesos', 'articles', 'dropdown', '/articles(/.*)?', false, null, 20);
+		Menus.addSubMenuItem('sidebar', 'articles', 'Lista de Noticias', 'articles');
+		Menus.addSubMenuItem('sidebar', 'articles', 'Crear Noticia', 'articles/create');
 	}
 ]);
 'use strict';
@@ -247,39 +253,45 @@ angular.module('articles').config(['$stateProvider',
 ]);
 'use strict';
 
-angular.module('articles').controller('ArticlesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Articles',
-	function($scope, $stateParams, $location, Authentication, Articles) {
+//Original del template.
+angular.module('articles').controller('ArticlesController', ['$scope', '$stateParams', '$timeout', '$window','$location', 'Authentication', 'Articles', 'FileUploader','Categoria',
+	function($scope, $stateParams, $timeout,  $window, $location, Authentication, Articles, FileUploader, Categoria) {
+
 		$scope.authentication = Authentication;
 
+		// Create file uploader instance
+	     $scope.uploader = new FileUploader();
+
+	   
+
+		// Propio del template. angle
 		$scope.create = function() {
+
+			// console.log('categoria' + $scope.data.repeatSelect);
+
 			var article = new Articles({
+
 				title: this.title,
-				content: this.content
+				content: this.content,
+				image: this.imageURL,
+				categoria: $scope.data.repeatSelect
+				
 			});
+
+			
+
+
 			article.$save(function(response) {
 				$location.path('articles/' + response._id);
 
 				$scope.title = '';
 				$scope.content = '';
+				$scope.imageURL = '';
+				$scope.categoria = '';
+
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});
-		};
-
-		$scope.remove = function(article) {
-			if (article) {
-				article.$remove();
-
-				for (var i in $scope.articles) {
-					if ($scope.articles[i] === article) {
-						$scope.articles.splice(i, 1);
-					}
-				}
-			} else {
-				$scope.article.$remove(function() {
-					$location.path('articles');
-				});
-			}
 		};
 
 		$scope.update = function() {
@@ -301,6 +313,62 @@ angular.module('articles').controller('ArticlesController', ['$scope', '$statePa
 				articleId: $stateParams.articleId
 			});
 		};
+
+		//Agregando funcionalidad de categorias Javier 
+	    $scope.findCat = function() {
+			$scope.categoria = Categoria.query();
+		};
+
+		$scope.findOneCat = function() {
+			$scope.categoria = Categoria.get({
+				categoriaId: $stateParams.categoriaId
+			});
+		};
+
+		$scope.data = {
+		    repeatSelect: null,
+		    availableOptions: [
+		      {id: '1', name: 'Accidente'},
+		      {id: '2', name: 'Secuestro'},
+		      {id: '3', name: 'Robo'},
+		      {id: '4', name: 'Asesinato'}
+		    ],
+		   };
+
+
+
+		// Called after the user selected a new picture file
+	    $scope.uploader.onAfterAddingFile = function (fileItem) {
+	      if ($window.FileReader) {
+	        var fileReader = new FileReader();
+	        fileReader.readAsDataURL(fileItem._file);
+
+	        fileReader.onload = function (fileReaderEvent) {
+	          $timeout(function () {
+	            $scope.imageURL = fileReaderEvent.target.result;
+	            console.log('$scope.imageURL ' + $scope.imageURL);
+	            console.log('probando la categoria ' + this.option.id);
+
+	            $scope.findCat();//Para buscar categorias
+
+
+	          }, 0);
+	        };
+	      }
+	    };
+
+		$scope.uploadImagen = function (imagen) {
+	      // Clear messages
+	      $scope.success = $scope.error = null;
+	      console.log('entro a uploadImagen en ArticlesController');
+	      // console.log($scope.user.profileImageURL + 'O, ' + $scope.imageURL);
+
+	      // Start upload
+	      $scope.uploader.uploadAll();
+	    };
+
+
+	    
 	}
 ]);
 'use strict';
@@ -327,11 +395,11 @@ angular.module('articles').factory('Articles', ['$resource',
     coreMenu.$inject = ['Menus'];
     function coreMenu(Menus){
 
-        Menus.addMenuItem('sidebar', 'Blog', 'blog', 'dropdown', null, true, null, 9, 'icon-pencil');
-        Menus.addSubMenuItem('sidebar', 'blog', 'List',         'blog/list');
-        Menus.addSubMenuItem('sidebar', 'blog', 'Post',         'blog/post');
-        Menus.addSubMenuItem('sidebar', 'blog', 'Articles',     'blog/articles');
-        Menus.addSubMenuItem('sidebar', 'blog', 'Article View', 'blog/article/123');
+        // Menus.addMenuItem('sidebar', 'Blog', 'blog', 'dropdown', null, true, null, 9, 'icon-pencil');
+        // Menus.addSubMenuItem('sidebar', 'blog', 'List',         'blog/list');
+        // Menus.addSubMenuItem('sidebar', 'blog', 'Post',         'blog/post');
+        // Menus.addSubMenuItem('sidebar', 'blog', 'Articles',     'blog/articles');
+        // Menus.addSubMenuItem('sidebar', 'blog', 'Article View', 'blog/article/123');
 
     }
 
@@ -1045,6 +1113,118 @@ angular.module('articles').factory('Articles', ['$resource',
     }
 })();
 
+'use strict';
+
+
+angular.module('categoria').run(['Menus',
+	function(Menus) {
+		// Set top bar menu items
+		Menus.addMenuItem('sidebar', 'Categoria', 'categoria', 'dropdown', '/categoria(/.*)?', false, null, 20);
+		Menus.addSubMenuItem('sidebar', 'categoria', 'Lista de Categoria', 'categoria');
+		Menus.addSubMenuItem('sidebar', 'categoria', 'Crear Categoria', 'categoria/create');
+	}
+]);
+'use strict';
+
+// Setting up route
+angular.module('categoria').config(['$stateProvider',
+	function($stateProvider) {
+		
+		$stateProvider.
+		state('app.listCategoria', {
+			url: '/categoria',
+			title: 'List Categoria',
+			templateUrl: 'modules/categoria/views/list-categoria.client.view.html'
+		}).
+		state('app.createCategoria', {
+			url: '/categoria/create',
+			title: 'New Categoria',
+			templateUrl: 'modules/categoria/views/create-categoria.client.view.html'
+		}).
+		state('app.viewCategoria', {
+			url: '/categoria/:categoriaId',
+			title: 'View Categoria',
+			templateUrl: 'modules/categoria/views/view-categoria.client.view.html',
+			controller: 'CategoriaController'
+		}).
+		state('app.editCategoria', {
+			title: 'Edit Categoria',
+			url: '/categoria/:categoriaId/edit',
+			templateUrl: 'modules/categoria/views/edit-categoria.client.view.html'
+		});
+	}
+]);
+'use strict';
+
+//Original del template.
+angular.module('categoria').controller('CategoriaController', ['$scope', '$stateParams', '$timeout', '$window','$location', 'Authentication', 'Categoria', 'FileUploader',
+	function($scope, $stateParams, $timeout,  $window, $location, Authentication, Categoria, FileUploader) {
+
+		$scope.authentication = Authentication;
+
+		// Create file uploader instance
+	     // $scope.uploader = new FileUploader();
+
+	   
+
+		// Propio del template. angle
+		$scope.create = function() {
+			
+			var categoria = new Categoria({
+
+				title: this.title,
+				content: this.content
+				// image: this.imageURL
+			});
+			
+			categoria.$save(function(response) {
+				$location.path('categoria/' + response._id);
+				$scope.title = '';
+				$scope.content = '';
+				
+
+			}, function(errorResponse) {
+				$scope.error = errorResponse.data.message;
+			});
+		};
+
+		$scope.update = function() {
+			var categoria = $scope.categoria;
+
+			categoria.$update(function() {
+				$location.path('categoria/' + categoria._id);
+			}, function(errorResponse) {
+				$scope.error = errorResponse.data.message;
+			});
+		};
+
+		$scope.find = function() {
+			$scope.categoria = Categoria.query();
+		};
+
+		$scope.findOne = function() {
+			$scope.categoria = Categoria.get({
+				categoriaId: $stateParams.categoriaId
+			});
+		};
+
+
+		
+	}
+]);
+'use strict';
+
+angular.module('categoria').factory('Categoria', ['$resource',
+	function($resource) {
+		return $resource('categoria/:articleId', {
+			categoriaId: '@_id'
+		}, {
+			update: {
+				method: 'PUT'
+			}
+		});
+	}
+]);
 (function() {
     'use strict';
 
@@ -1055,13 +1235,13 @@ angular.module('articles').factory('Articles', ['$resource',
     coreMenu.$inject = ['Menus'];
     function coreMenu(Menus){
 
-        Menus.addMenuItem('sidebar', 'Charts', 'charts', 'dropdown', null, true, null, 5, 'icon-graph');
-        Menus.addSubMenuItem('sidebar', 'charts', 'Flot',     'chart/flot');
-        Menus.addSubMenuItem('sidebar', 'charts', 'Radial',   'chart/radial');
-        Menus.addSubMenuItem('sidebar', 'charts', 'Chart JS', 'chart/chartjs');
-        Menus.addSubMenuItem('sidebar', 'charts', 'Rickshaw', 'chart/rickshaw');
-        Menus.addSubMenuItem('sidebar', 'charts', 'MorrisJS', 'chart/morris');
-        Menus.addSubMenuItem('sidebar', 'charts', 'Chartist', 'chart/chartist');
+        // Menus.addMenuItem('sidebar', 'Charts', 'charts', 'dropdown', null, true, null, 5, 'icon-graph');
+        // Menus.addSubMenuItem('sidebar', 'charts', 'Flot',     'chart/flot');
+        // Menus.addSubMenuItem('sidebar', 'charts', 'Radial',   'chart/radial');
+        // Menus.addSubMenuItem('sidebar', 'charts', 'Chart JS', 'chart/chartjs');
+        // Menus.addSubMenuItem('sidebar', 'charts', 'Rickshaw', 'chart/rickshaw');
+        // Menus.addSubMenuItem('sidebar', 'charts', 'MorrisJS', 'chart/morris');
+        // Menus.addSubMenuItem('sidebar', 'charts', 'Chartist', 'chart/chartist');
 
     }
 
@@ -2982,6 +3162,131 @@ angular.module('articles').factory('Articles', ['$resource',
 })();
 
 
+/**=========================================================
+ * Module: main.js
+ * Main Application Controller
+ =========================================================*/
+
+angular.module('core').controller('AppController',
+  ['$rootScope', '$scope', '$state', '$translate', '$window', '$localStorage', '$timeout', 'toggleStateService', 'colors', 'browser', 'cfpLoadingBar', 'Authentication',
+  function($rootScope, $scope, $state, $translate, $window, $localStorage, $timeout, toggle, colors, browser, cfpLoadingBar, Authentication) {
+    "use strict";
+
+    // This provides Authentication context.
+    $scope.authentication = Authentication;
+
+    // Loading bar transition
+    // ----------------------------------- 
+    var thBar;
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+        if($('.wrapper > section').length) // check if bar container exists
+          thBar = $timeout(function() {
+            cfpLoadingBar.start();
+          }, 0); // sets a latency Threshold
+    });
+    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+        event.targetScope.$watch("$viewContentLoaded", function () {
+          $timeout.cancel(thBar);
+          cfpLoadingBar.complete();
+        });
+    });
+
+
+    // Hook not found
+    $rootScope.$on('$stateNotFound',
+      function(event, unfoundState, fromState, fromParams) {
+          console.log(unfoundState.to); // "lazy.state"
+          console.log(unfoundState.toParams); // {a:1, b:2}
+          console.log(unfoundState.options); // {inherit:false} + default options
+      });
+    // Hook error
+    $rootScope.$on('$stateChangeError',
+      function(event, toState, toParams, fromState, fromParams, error){
+        console.log(error);
+      });
+    // Hook success
+    $rootScope.$on('$stateChangeSuccess',
+      function(event, toState, toParams, fromState, fromParams) {
+        // display new view from top
+        $window.scrollTo(0, 0);
+        // Save the route title
+        $rootScope.currTitle = $state.current.title;
+      });
+
+    $rootScope.currTitle = $state.current.title;
+    $rootScope.pageTitle = function() {
+      return $rootScope.app.name + ' - ' + ($rootScope.currTitle || $rootScope.app.description);
+    };
+
+    // iPad may presents ghost click issues
+    // if( ! browser.ipad )
+      // FastClick.attach(document.body);
+
+    // Close submenu when sidebar change from collapsed to normal
+    $rootScope.$watch('app.layout.isCollapsed', function(newValue, oldValue) {
+      if( newValue === false )
+        $rootScope.$broadcast('closeSidebarMenu');
+    });
+
+    // Restore layout settings
+    if( angular.isDefined($localStorage.layout) )
+      $scope.app.layout = $localStorage.layout;
+    else
+      $localStorage.layout = $scope.app.layout;
+
+    $rootScope.$watch("app.layout", function () {
+      $localStorage.layout = $scope.app.layout;
+    }, true);
+
+    
+    // Allows to use branding color with interpolation
+    // {{ colorByName('primary') }}
+    $scope.colorByName = colors.byName;
+
+    // Internationalization
+    // ----------------------
+
+    $scope.language = {
+      // Handles language dropdown
+      listIsOpen: false,
+      // list of available languages
+      available: {
+        'en':       'English',
+        'es_AR':    'Español'
+      },
+      // display always the current ui language
+      init: function () {
+        var proposedLanguage = $translate.proposedLanguage() || $translate.use();
+        var preferredLanguage = $translate.preferredLanguage(); // we know we have set a preferred one in app.config
+        $scope.language.selected = $scope.language.available[ (proposedLanguage || preferredLanguage) ];
+      },
+      set: function (localeId, ev) {
+        // Set the new idiom
+        $translate.use(localeId);
+        // save a reference for the current language
+        $scope.language.selected = $scope.language.available[localeId];
+        // finally toggle dropdown
+        $scope.language.listIsOpen = ! $scope.language.listIsOpen;
+      }
+    };
+
+    $scope.language.init();
+
+    // Restore application classes state
+    toggle.restoreState( $(document.body) );
+
+    // Applies animation to main view for the next pages to load
+    $timeout(function(){
+      $rootScope.mainViewAnimation = $rootScope.app.viewAnimation;
+    });
+
+    // cancel click event easily
+    $rootScope.cancel = function($event) {
+      $event.stopPropagation();
+    };
+
+}]);
+
 'use strict';
 
 angular.module('app.core').controller('HeaderController', ['$scope', 'Authentication', 'Menus',
@@ -3000,6 +3305,431 @@ angular.module('app.core').controller('HeaderController', ['$scope', 'Authentica
 		});
 	}
 ]);
+'use strict';
+
+angular.module('core').controller('SidebarController',
+  ['$rootScope', '$scope', '$state', 'Authentication', 'Menus', 'Utils',
+  function($rootScope, $scope, $state,  Authentication, Menus, Utils) {
+
+    $scope.authentication = Authentication;
+    $scope.menu = Menus.getMenu('sidebar');
+
+    var collapseList = [];
+
+    // demo: when switch from collapse to hover, close all items
+    $rootScope.$watch('app.layout.asideHover', function(oldVal, newVal){
+      if ( newVal === false && oldVal === true) {
+        closeAllBut(-1);
+      }
+    });
+
+    // Check item and children active state
+    var isActive = function(item) {
+
+      if(!item) return;
+
+      if( !item.sref || item.sref == '#') {
+        var foundActive = false;
+        angular.forEach(item.submenu, function(value, key) {
+          if(isActive(value)) foundActive = true;
+        });
+        return foundActive;
+      }
+      else
+        return $state.is(item.sref) || $state.includes(item.sref);
+    };
+
+    // Load menu from json file
+    // ----------------------------------- 
+    
+    $scope.getMenuItemPropClasses = function(item) {
+      return (item.heading ? 'nav-heading' : '') +
+             (isActive(item) ? ' active' : '') ;
+    };
+
+    // Handle sidebar collapse items
+    // ----------------------------------- 
+
+    $scope.addCollapse = function($index, item) {
+      collapseList[$index] = $rootScope.app.layout.asideHover ? true : !isActive(item);
+    };
+
+    $scope.isCollapse = function($index) {
+      return (collapseList[$index]);
+    };
+
+    $scope.toggleCollapse = function($index, isParentItem) {
+
+
+      // collapsed sidebar doesn't toggle drodopwn
+      if( Utils.isSidebarCollapsed() || $rootScope.app.layout.asideHover ) return true;
+
+      // make sure the item index exists
+      if( angular.isDefined( collapseList[$index] ) ) {
+        collapseList[$index] = !collapseList[$index];
+        closeAllBut($index);
+      }
+      else if ( isParentItem ) {
+        closeAllBut(-1);
+      }
+    
+      return true;
+    
+    };
+
+    function closeAllBut(index) {
+      index += '';
+      for(var i in collapseList) {
+        if(index < 0 || index.indexOf(i) < 0)
+          collapseList[i] = true;
+      }
+    }
+
+  }
+]);
+
+/**=========================================================
+ * Module: navbar-search.js
+ * Navbar search toggler * Auto dismiss on ESC key
+ =========================================================*/
+
+angular.module('core').directive('searchOpen', ['navSearch', function(navSearch) {
+  'use strict';
+
+  return {
+    restrict: 'A',
+    controller: ["$scope", "$element", function($scope, $element) {
+      $element
+        .on('click', function (e) { e.stopPropagation(); })
+        .on('click', navSearch.toggle);
+    }]
+  };
+
+}]).directive('searchDismiss', ['navSearch', function(navSearch) {
+  'use strict';
+
+  var inputSelector = '.navbar-form input[type="text"]';
+
+  return {
+    restrict: 'A',
+    controller: ["$scope", "$element", function($scope, $element) {
+
+      $(inputSelector)
+        .on('click', function (e) { e.stopPropagation(); })
+        .on('keyup', function(e) {
+          if (e.keyCode == 27) // ESC
+            navSearch.dismiss();
+        });
+        
+      // click anywhere closes the search
+      $(document).on('click', navSearch.dismiss);
+      // dismissable options
+      $element
+        .on('click', function (e) { e.stopPropagation(); })
+        .on('click', navSearch.dismiss);
+    }]
+  };
+
+}]);
+
+
+/**=========================================================
+ * Module: sidebar.js
+ * Wraps the sidebar and handles collapsed state
+ =========================================================*/
+
+/* jshint -W026 */
+angular.module('core').directive('sidebar', ['$rootScope', '$window', 'Utils', function($rootScope, $window, Utils) {
+  'use strict';
+  var $win  = $($window);
+  var $body = $('body');
+  var $scope;
+  var $sidebar;
+  var currentState = $rootScope.$state.current.name;
+
+  return {
+    restrict: 'EA',
+    template: '<nav class="sidebar" ng-transclude></nav>',
+    transclude: true,
+    replace: true,
+    link: function(scope, element, attrs) {
+      
+      $scope   = scope;
+      $sidebar = element;
+
+      var eventName = Utils.isTouch() ? 'click' : 'mouseenter' ;
+      var subNav = $();
+      $sidebar.on( eventName, '.nav > li', function() {
+
+        if( Utils.isSidebarCollapsed() || $rootScope.app.layout.asideHover ) {
+
+          subNav.trigger('mouseleave');
+          subNav = toggleMenuItem( $(this) );
+
+          // Used to detect click and touch events outside the sidebar          
+          sidebarAddBackdrop();
+
+        }
+
+      });
+
+      scope.$on('closeSidebarMenu', function() {
+        removeFloatingNav();
+      });
+
+      // Normalize state when resize to mobile
+      $win.on('resize', function() {
+        if( ! Utils.isMobile() )
+          $body.removeClass('aside-toggled');
+      });
+
+      // Adjustment on route changes
+      $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+        currentState = toState.name;
+        // Hide sidebar automatically on mobile
+        $('body.aside-toggled').removeClass('aside-toggled');
+
+        $rootScope.$broadcast('closeSidebarMenu');
+      });
+
+      // Allows to close
+      if ( angular.isDefined(attrs.sidebarAnyclickClose) ) {
+
+        $('.wrapper').on('click.sidebar', function(e){
+          // don't check if sidebar not visible
+          if( ! $body.hasClass('aside-toggled')) return;
+
+          // if not child of sidebar
+          if( ! $(e.target).parents('.aside').length ) {
+            $body.removeClass('aside-toggled');          
+          }
+
+        });
+      }
+
+    }
+  };
+
+  function sidebarAddBackdrop() {
+    var $backdrop = $('<div/>', { 'class': 'dropdown-backdrop'} );
+    $backdrop.insertAfter('.aside-inner').on("click mouseenter", function () {
+      removeFloatingNav();
+    });
+  }
+
+  // Open the collapse sidebar submenu items when on touch devices 
+  // - desktop only opens on hover
+  function toggleTouchItem($element){
+    $element
+      .siblings('li')
+      .removeClass('open')
+      .end()
+      .toggleClass('open');
+  }
+
+  // Handles hover to open items under collapsed menu
+  // ----------------------------------- 
+  function toggleMenuItem($listItem) {
+
+    removeFloatingNav();
+
+    var ul = $listItem.children('ul');
+    
+    if( !ul.length ) return $();
+    if( $listItem.hasClass('open') ) {
+      toggleTouchItem($listItem);
+      return $();
+    }
+
+    var $aside = $('.aside');
+    var $asideInner = $('.aside-inner'); // for top offset calculation
+    // float aside uses extra padding on aside
+    var mar = parseInt( $asideInner.css('padding-top'), 0) + parseInt( $aside.css('padding-top'), 0);
+    var subNav = ul.clone().appendTo( $aside );
+    
+    toggleTouchItem($listItem);
+
+    var itemTop = ($listItem.position().top + mar) - $sidebar.scrollTop();
+    var vwHeight = $win.height();
+
+    subNav
+      .addClass('nav-floating')
+      .css({
+        position: $scope.app.layout.isFixed ? 'fixed' : 'absolute',
+        top:      itemTop,
+        bottom:   (subNav.outerHeight(true) + itemTop > vwHeight) ? 0 : 'auto'
+      });
+
+    subNav.on('mouseleave', function() {
+      toggleTouchItem($listItem);
+      subNav.remove();
+    });
+
+    return subNav;
+  }
+
+  function removeFloatingNav() {
+    $('.dropdown-backdrop').remove();
+    $('.sidebar-subnav.nav-floating').remove();
+    $('.sidebar li.open').removeClass('open');
+  }
+
+}]);
+/**=========================================================
+ * Module: toggle-state.js
+ * Toggle a classname from the BODY Useful to change a state that 
+ * affects globally the entire layout or more than one item 
+ * Targeted elements must have [toggle-state="CLASS-NAME-TO-TOGGLE"]
+ * User no-persist to avoid saving the sate in browser storage
+ =========================================================*/
+
+angular.module('core').directive('toggleState', ['toggleStateService', function(toggle) {
+  'use strict';
+  
+  return {
+    restrict: 'A',
+    link: function(scope, element, attrs) {
+
+      var $body = $('body');
+
+      $(element)
+        .on('click', function (e) {
+          e.preventDefault();
+          var classname = attrs.toggleState;
+          
+          if(classname) {
+            if( $body.hasClass(classname) ) {
+              $body.removeClass(classname);
+              if( ! attrs.noPersist)
+                toggle.removeState(classname);
+            }
+            else {
+              $body.addClass(classname);
+              if( ! attrs.noPersist)
+                toggle.addState(classname);
+            }
+            
+          }
+
+      });
+    }
+  };
+  
+}]);
+
+angular.module('core').service('browser', function(){
+  "use strict";
+
+  var matched, browser;
+
+  var uaMatch = function( ua ) {
+    ua = ua.toLowerCase();
+
+    var match = /(opr)[\/]([\w.]+)/.exec( ua ) ||
+      /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
+      /(version)[ \/]([\w.]+).*(safari)[ \/]([\w.]+)/.exec( ua ) ||
+      /(webkit)[ \/]([\w.]+)/.exec( ua ) ||
+      /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
+      /(msie) ([\w.]+)/.exec( ua ) ||
+      ua.indexOf("trident") >= 0 && /(rv)(?::| )([\w.]+)/.exec( ua ) ||
+      ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
+      [];
+
+    var platform_match = /(ipad)/.exec( ua ) ||
+      /(iphone)/.exec( ua ) ||
+      /(android)/.exec( ua ) ||
+      /(windows phone)/.exec( ua ) ||
+      /(win)/.exec( ua ) ||
+      /(mac)/.exec( ua ) ||
+      /(linux)/.exec( ua ) ||
+      /(cros)/i.exec( ua ) ||
+      [];
+
+    return {
+      browser: match[ 3 ] || match[ 1 ] || "",
+      version: match[ 2 ] || "0",
+      platform: platform_match[ 0 ] || ""
+    };
+  };
+
+  matched = uaMatch( window.navigator.userAgent );
+  browser = {};
+
+  if ( matched.browser ) {
+    browser[ matched.browser ] = true;
+    browser.version = matched.version;
+    browser.versionNumber = parseInt(matched.version);
+  }
+
+  if ( matched.platform ) {
+    browser[ matched.platform ] = true;
+  }
+
+  // These are all considered mobile platforms, meaning they run a mobile browser
+  if ( browser.android || browser.ipad || browser.iphone || browser[ "windows phone" ] ) {
+    browser.mobile = true;
+  }
+
+  // These are all considered desktop platforms, meaning they run a desktop browser
+  if ( browser.cros || browser.mac || browser.linux || browser.win ) {
+    browser.desktop = true;
+  }
+
+  // Chrome, Opera 15+ and Safari are webkit based browsers
+  if ( browser.chrome || browser.opr || browser.safari ) {
+    browser.webkit = true;
+  }
+
+  // IE11 has a new token so we will assign it msie to avoid breaking changes
+  if ( browser.rv )
+  {
+    var ie = "msie";
+
+    matched.browser = ie;
+    browser[ie] = true;
+  }
+
+  // Opera 15+ are identified as opr
+  if ( browser.opr )
+  {
+    var opera = "opera";
+
+    matched.browser = opera;
+    browser[opera] = true;
+  }
+
+  // Stock Android browsers are marked as Safari on Android.
+  if ( browser.safari && browser.android )
+  {
+    var android = "android";
+
+    matched.browser = android;
+    browser[android] = true;
+  }
+
+  // Assign the name and platform variable
+  browser.name = matched.browser;
+  browser.platform = matched.platform;
+
+
+  return browser;
+
+});
+/**=========================================================
+ * Module: colors.js
+ * Services to retrieve global colors
+ =========================================================*/
+ 
+angular.module('core').factory('colors', ['APP_COLORS', function(colors) {
+  'use strict';
+  return {
+    byName: function(name) {
+      return (colors[name] || '#fff');
+    }
+  };
+
+}]);
+
 'use strict';
 
 //Menu service used for managing  menus
@@ -3172,6 +3902,271 @@ angular.module('app.core').service('Menus', [
 		this.addMenu('sidebar');
 	}
 ]);
+/**=========================================================
+ * Module: nav-search.js
+ * Services to share navbar search functions
+ =========================================================*/
+ 
+angular.module('core').service('navSearch', function() {
+  'use strict';
+  var navbarFormSelector = 'form.navbar-form';
+  return {
+    toggle: function() {
+      
+      var navbarForm = $(navbarFormSelector);
+
+      navbarForm.toggleClass('open');
+      
+      var isOpen = navbarForm.hasClass('open');
+      
+      navbarForm.find('input')[isOpen ? 'focus' : 'blur']();
+
+    },
+
+    dismiss: function() {
+      $(navbarFormSelector)
+        .removeClass('open')      // Close control
+        .find('input[type="text"]').blur() // remove focus
+        .val('')                    // Empty input
+        ;
+    }
+  };
+
+});
+/**=========================================================
+ * Module: helpers.js
+ * Provides helper functions for routes definition
+ =========================================================*/
+
+/* jshint -W026 */
+/* jshint -W003 */
+angular.module('core').provider('RouteHelpers', ['APP_REQUIRES', function (appRequires) {
+  "use strict";
+
+  // Set here the base of the relative path
+  // for all app views
+  this.basepath = function (uri) {
+    return 'app/views/' + uri;
+  };
+
+  // Generates a resolve object by passing script names
+  // previously configured in constant.APP_REQUIRES
+  this.resolveFor = function () {
+    var _args = arguments;
+    return {
+      deps: ['$ocLazyLoad','$q', function ($ocLL, $q) {
+        // Creates a promise chain for each argument
+        var promise = $q.when(1); // empty promise
+        for(var i=0, len=_args.length; i < len; i ++){
+          promise = andThen(_args[i]);
+        }
+        return promise;
+
+        // creates promise to chain dynamically
+        function andThen(_arg) {
+          // also support a function that returns a promise
+          if(typeof _arg == 'function')
+              return promise.then(_arg);
+          else
+              return promise.then(function() {
+                // if is a module, pass the name. If not, pass the array
+                var whatToLoad = getRequired(_arg);
+                // simple error check
+                if(!whatToLoad) return $.error('Route resolve: Bad resource name [' + _arg + ']');
+                // finally, return a promise
+                return $ocLL.load( whatToLoad );
+              });
+        }
+        // check and returns required data
+        // analyze module items with the form [name: '', files: []]
+        // and also simple array of script files (for not angular js)
+        function getRequired(name) {
+          if (appRequires.modules)
+              for(var m in appRequires.modules)
+                  if(appRequires.modules[m].name && appRequires.modules[m].name === name)
+                      return appRequires.modules[m];
+          return appRequires.scripts && appRequires.scripts[name];
+        }
+
+      }]};
+  }; // resolveFor
+
+  // not necessary, only used in config block for routes
+  this.$get = function(){};
+
+}]);
+
+
+/**=========================================================
+ * Module: toggle-state.js
+ * Services to share toggle state functionality
+ =========================================================*/
+
+angular.module('core').service('toggleStateService', ['$rootScope', function($rootScope) {
+  'use strict';
+  var storageKeyName  = 'toggleState';
+
+  // Helper object to check for words in a phrase //
+  var WordChecker = {
+    hasWord: function (phrase, word) {
+      return new RegExp('(^|\\s)' + word + '(\\s|$)').test(phrase);
+    },
+    addWord: function (phrase, word) {
+      if (!this.hasWord(phrase, word)) {
+        return (phrase + (phrase ? ' ' : '') + word);
+      }
+    },
+    removeWord: function (phrase, word) {
+      if (this.hasWord(phrase, word)) {
+        return phrase.replace(new RegExp('(^|\\s)*' + word + '(\\s|$)*', 'g'), '');
+      }
+    }
+  };
+
+  // Return service public methods
+  return {
+    // Add a state to the browser storage to be restored later
+    addState: function(classname){
+      var data = angular.fromJson($rootScope.$storage[storageKeyName]);
+      
+      if(!data)  {
+        data = classname;
+      }
+      else {
+        data = WordChecker.addWord(data, classname);
+      }
+
+      $rootScope.$storage[storageKeyName] = angular.toJson(data);
+    },
+
+    // Remove a state from the browser storage
+    removeState: function(classname){
+      var data = $rootScope.$storage[storageKeyName];
+      // nothing to remove
+      if(!data) return;
+
+      data = WordChecker.removeWord(data, classname);
+
+      $rootScope.$storage[storageKeyName] = angular.toJson(data);
+    },
+    
+    // Load the state string and restore the classlist
+    restoreState: function($elem) {
+      var data = angular.fromJson($rootScope.$storage[storageKeyName]);
+      
+      // nothing to restore
+      if(!data) return;
+      $elem.addClass(data);
+    }
+
+  };
+
+}]);
+/**=========================================================
+ * Module: utils.js
+ * Utility library to use across the theme
+ =========================================================*/
+
+angular.module('core').service('Utils', ["$window", "APP_MEDIAQUERY", function($window, APP_MEDIAQUERY) {
+    'use strict';
+    
+    var $html = angular.element("html"),
+        $win  = angular.element($window),
+        $body = angular.element('body');
+
+    return {
+      // DETECTION
+      support: {
+        transition: (function() {
+          var transitionEnd = (function() {
+
+            var element = document.body || document.documentElement,
+              transEndEventNames = {
+                WebkitTransition: 'webkitTransitionEnd',
+                MozTransition: 'transitionend',
+                OTransition: 'oTransitionEnd otransitionend',
+                transition: 'transitionend'
+              }, name;
+
+            for (name in transEndEventNames) {
+              if (element.style[name] !== undefined) return transEndEventNames[name];
+            }
+          }());
+
+          return transitionEnd && { end: transitionEnd };
+        })(),
+        animation: (function() {
+          var animationEnd = (function() {
+
+            var element = document.body || document.documentElement,
+              animEndEventNames = {
+                WebkitAnimation: 'webkitAnimationEnd',
+                MozAnimation: 'animationend',
+                OAnimation: 'oAnimationEnd oanimationend',
+                animation: 'animationend'
+              }, name;
+
+            for (name in animEndEventNames) {
+              if (element.style[name] !== undefined) return animEndEventNames[name];
+            }
+          }());
+
+          return animationEnd && { end: animationEnd };
+        })(),
+        requestAnimationFrame: window.requestAnimationFrame ||
+                               window.webkitRequestAnimationFrame ||
+                               window.mozRequestAnimationFrame ||
+                               window.msRequestAnimationFrame ||
+                               window.oRequestAnimationFrame ||
+                               function(callback){ window.setTimeout(callback, 1000/60); },
+        touch: (
+            ('ontouchstart' in window && navigator.userAgent.toLowerCase().match(/mobile|tablet/)) ||
+            (window.DocumentTouch && document instanceof window.DocumentTouch)  ||
+            (window.navigator.msPointerEnabled && window.navigator.msMaxTouchPoints > 0) || //IE 10
+            (window.navigator.pointerEnabled && window.navigator.maxTouchPoints > 0) || //IE >=11
+            false
+        ),
+        mutationobserver: (window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver || null)
+      },
+      // UTILITIES
+      isInView: function(element, options) {
+
+        var $element = $(element);
+
+        if (!$element.is(':visible')) {
+          return false;
+        }
+
+        var window_left = $win.scrollLeft(),
+            window_top  = $win.scrollTop(),
+            offset      = $element.offset(),
+            left        = offset.left,
+            top         = offset.top;
+
+        options = $.extend({topoffset:0, leftoffset:0}, options);
+
+        if (top + $element.height() >= window_top && top - options.topoffset <= window_top + $win.height() &&
+            left + $element.width() >= window_left && left - options.leftoffset <= window_left + $win.width()) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      langdirection: $html.attr("dir") == "rtl" ? "right" : "left",
+      isTouch: function () {
+        return $html.hasClass('touch');
+      },
+      isSidebarCollapsed: function () {
+        return $body.hasClass('aside-collapsed');
+      },
+      isSidebarToggled: function () {
+        return $body.hasClass('aside-toggled');
+      },
+      isMobile: function () {
+        return $win.width() < APP_MEDIAQUERY.tablet;
+      }
+    };
+}]);
 (function() {
     'use strict';
 
@@ -3182,10 +4177,10 @@ angular.module('app.core').service('Menus', [
     coreMenu.$inject = ['Menus'];
     function coreMenu(Menus){
 
-        Menus.addMenuItem('sidebar', 'Dashboard', 'dashboard', 'dropdown', null, true, null, 1, 'icon-speedometer');
-        Menus.addSubMenuItem('sidebar', 'dashboard', 'Dashboard', 'dashboard');
-        Menus.addSubMenuItem('sidebar', 'dashboard', 'Dashboard v2', 'dashboard/v2');
-        Menus.addSubMenuItem('sidebar', 'dashboard', 'Dashboard v3', 'dashboard/v3');
+        // Menus.addMenuItem('sidebar', 'Dashboard', 'dashboard', 'dropdown', null, true, null, 1, 'icon-speedometer');
+        // Menus.addSubMenuItem('sidebar', 'dashboard', 'Dashboard', 'dashboard');
+        // Menus.addSubMenuItem('sidebar', 'dashboard', 'Dashboard v2', 'dashboard/v2');
+        // Menus.addSubMenuItem('sidebar', 'dashboard', 'Dashboard v3', 'dashboard/v3');
 
     }
 
@@ -3553,11 +4548,11 @@ angular.module('app.core').service('Menus', [
     coreMenu.$inject = ['Menus'];
     function coreMenu(Menus){
 
-        Menus.addMenuItem('sidebar', 'Ecommerce', 'ecommerce', 'dropdown', null, true, null, 10, 'icon-basket-loaded');
-        Menus.addSubMenuItem('sidebar', 'ecommerce', 'Orders',       'ecommerce/orders');
-        Menus.addSubMenuItem('sidebar', 'ecommerce', 'Order View',   'ecommerce/order-view');
-        Menus.addSubMenuItem('sidebar', 'ecommerce', 'Products',     'ecommerce/products');
-        Menus.addSubMenuItem('sidebar', 'ecommerce', 'Product View', 'ecommerce/product/1');
+        // Menus.addMenuItem('sidebar', 'Ecommerce', 'ecommerce', 'dropdown', null, true, null, 10, 'icon-basket-loaded');
+        // Menus.addSubMenuItem('sidebar', 'ecommerce', 'Orders',       'ecommerce/orders');
+        // Menus.addSubMenuItem('sidebar', 'ecommerce', 'Order View',   'ecommerce/order-view');
+        // Menus.addSubMenuItem('sidebar', 'ecommerce', 'Products',     'ecommerce/products');
+        // Menus.addSubMenuItem('sidebar', 'ecommerce', 'Product View', 'ecommerce/product/1');
 
     }
 
@@ -3608,30 +4603,30 @@ angular.module('app.core').service('Menus', [
     coreMenu.$inject = ['Menus'];
     function coreMenu(Menus){
 
-        Menus.addMenuItem('sidebar', 'Elements', 'elements', 'dropdown', null, true, null, 3, 'icon-chemistry');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Buttons',           'elements/buttons');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Notifications',     'elements/notifications');
-        Menus.addSubMenuItem('sidebar', 'elements', 'ngDialog',          'elements/ngdialog');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Sweet Alert',       'elements/sweetalert');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Tour',              'elements/tour');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Interaction',       'elements/interaction');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Carousel',          'elements/carousel');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Spinners',          'elements/spinners');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Dropdown',          'elements/dropdown-animations');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Nav Tree',          'elements/navtree');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Nestable',          'elements/nestable');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Sortable',          'elements/sortable');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Panels',            'elements/panels');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Portlets',          'elements/portlets');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Grid',              'elements/grid');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Grid Masonry',      'elements/grid-masonry');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Grid Masonry Deck', 'elements/grid-masonry-deck');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Typography',        'elements/typo');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Font Icons',        'elements/icons-font');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Weather Icons',     'elements/icons-weather');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Colors',            'elements/colors');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Localization',      'elements/localization');
-        Menus.addSubMenuItem('sidebar', 'elements', 'Infinite scroll',   'elements/infinite-scroll');
+        // Menus.addMenuItem('sidebar', 'Elements', 'elements', 'dropdown', null, true, null, 3, 'icon-chemistry');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Buttons',           'elements/buttons');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Notifications',     'elements/notifications');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'ngDialog',          'elements/ngdialog');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Sweet Alert',       'elements/sweetalert');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Tour',              'elements/tour');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Interaction',       'elements/interaction');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Carousel',          'elements/carousel');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Spinners',          'elements/spinners');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Dropdown',          'elements/dropdown-animations');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Nav Tree',          'elements/navtree');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Nestable',          'elements/nestable');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Sortable',          'elements/sortable');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Panels',            'elements/panels');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Portlets',          'elements/portlets');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Grid',              'elements/grid');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Grid Masonry',      'elements/grid-masonry');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Grid Masonry Deck', 'elements/grid-masonry-deck');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Typography',        'elements/typo');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Font Icons',        'elements/icons-font');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Weather Icons',     'elements/icons-weather');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Colors',            'elements/colors');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Localization',      'elements/localization');
+        // Menus.addSubMenuItem('sidebar', 'elements', 'Infinite scroll',   'elements/infinite-scroll');
 
     }
 
@@ -4770,16 +5765,16 @@ angular.module('app.core').service('Menus', [
     coreMenu.$inject = ['Menus'];
     function coreMenu(Menus){
 
-        Menus.addMenuItem('sidebar', 'Extras', 'extras', 'dropdown', null, true, null, 8, 'icon-cup');
-        Menus.addSubMenuItem('sidebar', 'extras', 'Forum',       'extras/forum');
-        Menus.addSubMenuItem('sidebar', 'extras', 'Mailbox',     'extras/mailbox/folder/inbox');
-        Menus.addSubMenuItem('sidebar', 'extras', 'Timeline',    'extras/timeline');
-        Menus.addSubMenuItem('sidebar', 'extras', 'Calendar',    'extras/calendar');
-        Menus.addSubMenuItem('sidebar', 'extras', 'Invoice',     'extras/invoice');
-        Menus.addSubMenuItem('sidebar', 'extras', 'Search',      'extras/search');
-        Menus.addSubMenuItem('sidebar', 'extras', 'Todo List',   'extras/todo');
-        Menus.addSubMenuItem('sidebar', 'extras', 'Profile',     'extras/profile');
-        Menus.addSubMenuItem('sidebar', 'extras', 'Code Editor', 'extras/code-editor');
+        // Menus.addMenuItem('sidebar', 'Extras', 'extras', 'dropdown', null, true, null, 8, 'icon-cup');
+        // Menus.addSubMenuItem('sidebar', 'extras', 'Forum',       'extras/forum');
+        // Menus.addSubMenuItem('sidebar', 'extras', 'Mailbox',     'extras/mailbox/folder/inbox');
+        // Menus.addSubMenuItem('sidebar', 'extras', 'Timeline',    'extras/timeline');
+        // Menus.addSubMenuItem('sidebar', 'extras', 'Calendar',    'extras/calendar');
+        // Menus.addSubMenuItem('sidebar', 'extras', 'Invoice',     'extras/invoice');
+        // Menus.addSubMenuItem('sidebar', 'extras', 'Search',      'extras/search');
+        // Menus.addSubMenuItem('sidebar', 'extras', 'Todo List',   'extras/todo');
+        // Menus.addSubMenuItem('sidebar', 'extras', 'Profile',     'extras/profile');
+        // Menus.addSubMenuItem('sidebar', 'extras', 'Code Editor', 'extras/code-editor');
     }
 
 })();
@@ -5451,16 +6446,16 @@ angular.module('app.core').service('Menus', [
     coreMenu.$inject = ['Menus'];
     function coreMenu(Menus){
 
-        Menus.addMenuItem('sidebar', 'Forms', 'forms', 'dropdown', null, true, null, 4, 'icon-note');
-        Menus.addSubMenuItem('sidebar', 'forms', 'Standard',    'form/standard');
-        Menus.addSubMenuItem('sidebar', 'forms', 'Extended',    'form/extended');
-        Menus.addSubMenuItem('sidebar', 'forms', 'Validation',  'form/validation');
-        Menus.addSubMenuItem('sidebar', 'forms', 'Parsley',     'form/parsley');
-        Menus.addSubMenuItem('sidebar', 'forms', 'Wizard',      'form/wizard');
-        Menus.addSubMenuItem('sidebar', 'forms', 'Upload',      'form/upload');
-        Menus.addSubMenuItem('sidebar', 'forms', 'xEditable',   'form/xeditable');
-        Menus.addSubMenuItem('sidebar', 'forms', 'Image Crop',  'form/imagecrop');
-        Menus.addSubMenuItem('sidebar', 'forms', 'uiSelect',    'form/uiselect');
+        // Menus.addMenuItem('sidebar', 'Forms', 'forms', 'dropdown', null, true, null, 4, 'icon-note');
+        // Menus.addSubMenuItem('sidebar', 'forms', 'Standard',    'form/standard');
+        // Menus.addSubMenuItem('sidebar', 'forms', 'Extended',    'form/extended');
+        // Menus.addSubMenuItem('sidebar', 'forms', 'Validation',  'form/validation');
+        // Menus.addSubMenuItem('sidebar', 'forms', 'Parsley',     'form/parsley');
+        // Menus.addSubMenuItem('sidebar', 'forms', 'Wizard',      'form/wizard');
+        // Menus.addSubMenuItem('sidebar', 'forms', 'Upload',      'form/upload');
+        // Menus.addSubMenuItem('sidebar', 'forms', 'xEditable',   'form/xeditable');
+        // Menus.addSubMenuItem('sidebar', 'forms', 'Image Crop',  'form/imagecrop');
+        // Menus.addSubMenuItem('sidebar', 'forms', 'uiSelect',    'form/uiselect');
 
     }
 
@@ -6975,9 +7970,9 @@ angular.module('app.core').service('Menus', [
     coreMenu.$inject = ['Menus'];
     function coreMenu(Menus){
 
-        Menus.addMenuItem('sidebar', 'Maps', 'maps', 'dropdown', null, true, null, 7, 'icon-speedometer');
-        Menus.addSubMenuItem('sidebar', 'maps', 'Maps Google', 'maps/google');
-        Menus.addSubMenuItem('sidebar', 'maps', 'Maps Vector', 'maps/vector');
+        // Menus.addMenuItem('sidebar', 'Maps', 'maps', 'dropdown', null, true, null, 7, 'icon-speedometer');
+        // Menus.addSubMenuItem('sidebar', 'maps', 'Maps Google', 'maps/google');
+        // Menus.addSubMenuItem('sidebar', 'maps', 'Maps Vector', 'maps/vector');
 
     }
 
@@ -8341,8 +9336,8 @@ angular.module('page').config(['$stateProvider',
       // Global Settings
       // -----------------------------------
       $rootScope.app = {
-        name: 'Angle',
-        description: 'Angular Bootstrap Admin Template',
+        name: 'Denuncias',
+        description: 'Desarrollo de Aplicaciones Web',
         year: ((new Date()).getFullYear()),
         layout: {
           isFixed: true,
@@ -8752,14 +9747,14 @@ angular.module('page').config(['$stateProvider',
     coreMenu.$inject = ['Menus'];
     function coreMenu(Menus){
 
-        Menus.addMenuItem('sidebar', 'Tables', 'tables', 'dropdown', null, true, null, 6, 'icon-grid');
-        Menus.addSubMenuItem('sidebar', 'tables', 'Standard',     'table/standard');
-        Menus.addSubMenuItem('sidebar', 'tables', 'Extended',     'table/extended');
-        Menus.addSubMenuItem('sidebar', 'tables', 'DataTables',   'table/datatable');
-        Menus.addSubMenuItem('sidebar', 'tables', 'ngTables',     'table/ngtable');
-        Menus.addSubMenuItem('sidebar', 'tables', 'uiGrid',       'table/uigrid');
-        Menus.addSubMenuItem('sidebar', 'tables', 'xEditable',    'table/xeditable');
-        Menus.addSubMenuItem('sidebar', 'tables', 'Angular Grid', 'table/angulargrid');
+        // Menus.addMenuItem('sidebar', 'Tables', 'tables', 'dropdown', null, true, null, 6, 'icon-grid');
+        // Menus.addSubMenuItem('sidebar', 'tables', 'Standard',     'table/standard');
+        // Menus.addSubMenuItem('sidebar', 'tables', 'Extended',     'table/extended');
+        // Menus.addSubMenuItem('sidebar', 'tables', 'DataTables',   'table/datatable');
+        // Menus.addSubMenuItem('sidebar', 'tables', 'ngTables',     'table/ngtable');
+        // Menus.addSubMenuItem('sidebar', 'tables', 'uiGrid',       'table/uigrid');
+        // Menus.addSubMenuItem('sidebar', 'tables', 'xEditable',    'table/xeditable');
+        // Menus.addSubMenuItem('sidebar', 'tables', 'Angular Grid', 'table/angulargrid');
 
     }
 
@@ -9807,7 +10802,13 @@ angular.module('users').config(['$stateProvider',
 		state('app.accounts', {
 			url: '/settings/accounts',
 			templateUrl: 'modules/users/views/settings/social-accounts.client.view.html'
-		});
+		})
+
+		// Javier - Agregando Ruta a usar para cambiar imagen de perfil
+		.state('app.picture', {
+        url: '/settings/picture',
+        templateUrl: 'modules/users/views/settings/change-profile-picture.client.view.html'
+      	});
 	}
 ]);
 'use strict';
@@ -9844,6 +10845,88 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 		};
 	}
 ]);
+'use strict';
+
+angular.module('users').controller('ChangeProfilePictureController', ['$scope', '$timeout', '$window', 'Authentication', 'FileUploader',
+  function ($scope, $timeout, $window, Authentication, FileUploader) {
+    $scope.user = Authentication.user;
+    $scope.imageURL = $scope.user.profileImageURL;
+
+    // Create file uploader instance
+    $scope.uploader = new FileUploader({
+      // url: 'api/users/picture',
+      url: 'users/picture',
+      alias: 'newProfilePicture'
+    });
+
+    // Set file uploader image filter
+    $scope.uploader.filters.push({
+      name: 'imageFilter',
+      fn: function (item, options) {
+        var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+        return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+      }
+    });
+
+    // Called after the user selected a new picture file
+    $scope.uploader.onAfterAddingFile = function (fileItem) {
+      if ($window.FileReader) {
+        var fileReader = new FileReader();
+        fileReader.readAsDataURL(fileItem._file);
+
+        fileReader.onload = function (fileReaderEvent) {
+          $timeout(function () {
+            $scope.imageURL = fileReaderEvent.target.result;
+            console.log('$scope.imageURL ' + $scope.imageURL)
+
+          }, 0);
+        };
+      }
+    };
+
+    // Called after the user has successfully uploaded a new picture
+    $scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {
+      console.log('entro en onSuccessItem');
+
+      // Show success message
+      $scope.success = true;
+
+      // Populate user object
+      $scope.user = Authentication.user = response;
+      console.log('$scope.user' + $scope.user);
+
+      // Clear upload buttons
+      $scope.cancelUpload();
+    };
+
+    // Called after the user has failed to uploaded a new picture
+    $scope.uploader.onErrorItem = function (fileItem, response, status, headers) {
+      // Clear upload buttons
+      $scope.cancelUpload();
+
+      // Show error message
+      $scope.error = response.message;
+    };
+
+    // Change user profile picture
+    $scope.uploadProfilePicture = function () {
+      // Clear messages
+      $scope.success = $scope.error = null;
+      console.log('entro a uploadProfilePicture en ChangeProfilePictureController');
+      // console.log($scope.user.profileImageURL + 'O, ' + $scope.imageURL);
+
+      // Start upload
+      $scope.uploader.uploadAll();
+    };
+
+    // Cancel the upload process
+    $scope.cancelUpload = function () {
+      $scope.uploader.clearQueue();
+      $scope.imageURL = $scope.user.profileImageURL;
+    };
+  }
+]);
+
 'use strict';
 
 angular.module('users').controller('PasswordController', ['$scope', '$stateParams', '$http', '$location', 'Authentication',
@@ -10425,7 +11508,7 @@ angular.module('users').factory('Users', ['$resource',
     coreMenu.$inject = ['Menus'];
     function coreMenu(Menus){
 
-        Menus.addMenuItem('sidebar', 'Widgets', 'widgets', null, '/widgets', true, null, 2, 'icon-grid');
+        // Menus.addMenuItem('sidebar', 'Widgets', 'widgets', null, '/widgets', true, null, 2, 'icon-grid');
 
     }
 
