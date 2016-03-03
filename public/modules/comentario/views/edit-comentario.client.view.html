@@ -1,0 +1,41 @@
+<h3>Edit Comentario
+	<ul class="breadcrumb">
+	  <li><a ui-sref="app.home">Home</a>
+	  </li>
+	  <li ng-repeat="state in $state.$current.path" ng-switch="$last" ng-if="!state.abstract" ng-class="{active: $last}"><a ng-switch-when="false" href="#{{state.url.format($stateParams)}}">{{state.title}}</a>
+	     <span ng-switch-when="true">{{state.title}}</span>
+	  </li>
+	</ul>
+</h3>
+<section data-ng-controller="ComentarioController" data-ng-init="findOne()">
+	<div class="col-md-12">
+		<form name="comentarioForm" class="form-horizontal" data-ng-submit="update(comentarioForm.$valid)" novalidate>
+			<fieldset>
+				<div class="form-group" ng-class="{ 'has-error' : submitted && comentarioForm.title.$invalid}">
+					<label class="control-label" for="title">Title</label>
+					<div class="controls">
+						<input name="title" type="text" data-ng-model="comentario.title" id="title" class="form-control" placeholder="Title" required>
+					</div>
+					<div ng-show="submitted && comentarioForm.title.$invalid" class="help-block">
+						<p ng-show="comentarioForm.title.$error.required" class="text-danger">Title is required</p>
+					</div>
+				</div>
+				<div class="form-group" ng-class="{ 'has-error' : submitted && comentarioForm.content.$invalid}">
+					<label class="control-label" for="content">Content</label>
+					<div class="controls">
+						<textarea name="content" data-ng-model="comentario.content" id="content" class="form-control" cols="30" rows="10" placeholder="Content" required></textarea>
+					</div>
+					<div ng-show="submitted && comentarioForm.content.$invalid" class="help-block">
+						<p ng-show="comentarioForm.content.$error.required" class="text-danger">Content is required</p>
+					</div>
+				</div>
+				<div class="form-group mt">
+					<input type="submit" value="Update" class="btn btn-default">
+				</div>
+				<div data-ng-show="error" class="text-danger">
+					<strong data-ng-bind="error"></strong>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+</section>

@@ -2,86 +2,88 @@
 
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
-	Discuss = mongoose.model('Discuss'),
+	Comentario = mongoose.model('Comentario'),
 	_ = require('lodash');
 
 
 
 exports.create = function(req, res) {
-	var discuss = new Discuss(req.body);
-	Discuss.user = req.user;
+	var comentario = new Comentario(req.body);
+	comentario.user = req.user;
 
-	discuss.save(function(err) {
+	comentario.save(function(err) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
 			console.log("Guarda el Comentario");
-			res.json(discuss);
+			console.log(Comentario.user);
+			console.log(req.user);
+			res.json(comentario);
 		}
 	});
 };
 
 exports.read = function(req, res) {
-	res.json(req.discuss);
+	res.json(req.comentario);
 };
 
 
 
 exports.update = function(req, res) {
-	var discuss = req.discuss;
+	var comentario = req.comentario;
 
-	discuss = _.extend(discuss, req.body);
+	comentario = _.extend(comentario, req.body);
 
-	discuss.save(function(err) {
+	comentario.save(function(err) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.json(discuss);
+			res.json(comentario);
 		}
 	});
 };
 
 exports.delete = function(req, res) {
-	var discuss = req.discuss;
+	var comentario = req.comentario;
 
-	discuss.remove(function(err) {
+	comentario.remove(function(err) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.json(discuss);
+			res.json(comentario);
 		}
 	});
 };
 
 exports.list = function(req, res) {
-	discuss.find().sort('-created').populate('user', 'displayName').exec(function(err, discuss) {
+	Comentario.find().sort('-created').populate('user', 'displayName').exec(function(err, comentario) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.json(discuss);
+			res.json(comentario);
 		}
 	});
 };
 
-exports.discussByID = function(req, res, next, id) {
-	discuss.findById(id).populate('user', 'displayName').exec(function(err, discuss) {
+exports.comentarioByID = function(req, res, next, id) {
+	Comentario.findById(id).populate('user', 'displayName').exec(function(err, comentario) {
 		if (err) return next(err);
-		if (!discuss) return next(new Error('Error al cargar comentario ' + id));
-		req.discuss = discuss;
+		if (!comentario) return next(new Error('Error al cargar comentario ' + id));
+		req.comentario = comentario;
 		next();
 	});
 };
 
 exports.hasAuthorization = function(req, res, next) {
-	if (req.discuss.user.id !== req.user.id) {
+	if (req.comentario.user.id !== req.user.id) {
 		return res.status(403).send({
 			message: 'User is not authorized'
 		});

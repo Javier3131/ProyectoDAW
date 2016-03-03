@@ -7,11 +7,11 @@
 	  </li>
 	</ul>
 </h3>
-<section data-ng-controller="DiscussController">
+<section data-ng-controller="ComentarioController">
 	<div class="col-md-12">
-		<form name="discussForm" class="form-horizontal" data-ng-submit="create()" novalidate>
+		<form name="comentarioForm" class="form-horizontal" data-ng-submit="create()" novalidate>
 			<fieldset>
-				<div class="form-group" ng-class="{ 'has-error': discussForm.title.$dirty && discussForm.title.$invalid }">
+				<div class="form-group" ng-class="{ 'has-error': comentarioForm.title.$dirty && comentarioForm.title.$invalid }">
 					<label class="control-label" for="title">Comentario</label>
 					<div class="controls">
 						<input name="title" type="text" data-ng-model="comment" id="comment" class="form-control" placeholder="Title" required>

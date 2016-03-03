@@ -4,12 +4,17 @@ var mongoose = require('mongoose'),
 	Schema = mongoose.Schema;
 
 
-var DiscussSchema = new Schema({
+var ComentarioSchema = new Schema({
 	created: {
 		type: Date,
 		default: Date.now
 	},
 	
+	user: {
+		type: Schema.ObjectId,
+		ref: 'User'
+	},
+
 	comment: {
 		type: String,
 		default: '',
@@ -17,14 +22,8 @@ var DiscussSchema = new Schema({
 		required: 'Comentario no puede estar vacio'
 	},
 	
-	user: {
-		type: Schema.ObjectId,
-		ref: 'User'
-	},
-	article: {
-		type: Schema.ObjectId,
-		ref: 'Article'
-	}
+	
+	
 });
 
-mongoose.model('Discuss', DiscussSchema);
+mongoose.model('Comentario', ComentarioSchema);

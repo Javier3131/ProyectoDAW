@@ -1,13 +1,13 @@
 <h3>
-	<div class="pull-right" data-ng-show="authentication.user._id == discuss.user._id">
-		<a class="btn btn-primary" href="/#!/discuss/{{discuss._id}}/edit">
+	<div class="pull-right" data-ng-show="authentication.user._id == comentario.user._id">
+		<a class="btn btn-primary" href="/#!/comentario/{{comentario._id}}/edit">
 			<i class="fa fa-edit"></i>
 		</a>
 		<a class="btn btn-primary" data-ng-click="remove();">
 			<i class="fa fa-trash"></i>
 		</a>
 	</div>
-	{{discuss.title}}
+	{{comentario.title}}
 	<ul class="breadcrumb">
 	  <li><a ui-sref="app.home">Home</a>
 	  </li>
@@ -20,10 +20,10 @@
 	<small>
 		<em class="text-muted">
 			Posted on
-			<span data-ng-bind="discuss.created | date:'mediumDate'"></span>
+			<span data-ng-bind="comentario.created | date:'mediumDate'"></span>
 			by
-			<span data-ng-bind="discuss.user.displayName"></span>
+			<span data-ng-bind="comentario.user.displayName"></span>
 		</em>
 	</small>
-	<p class="lead" data-ng-bind="discuss.content"></p>
+	<p class="lead" data-ng-bind="comentario.content"></p>
 </section>
