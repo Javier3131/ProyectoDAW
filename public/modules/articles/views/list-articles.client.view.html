@@ -1,4 +1,3 @@
-
 <h3>Sucesos
 	<ul class="breadcrumb">
 		<li><a ui-sref="app.home">Inicio</a>
@@ -29,41 +28,31 @@
 
 	<!-- Empieza la modificacion del post -->
 	<div class="panel">
-		
-		<!-- <img ng-src="{{article.image}}"  class="img-thumbnail user-profile-picture"> -->
-		
+			
+			<!-- <img ng-src="{{article.image}}"  class="img-thumbnail user-profile-picture"> -->
+			
 		<div class="panel-body" data-ng-repeat="article in articles" data-ng-href="#!/articles/{{article._id}}" >
-			<img  width:"auto" ng-src="{{article.image}}"  class="img-thumbnail user-profile-picture" style="width:100%">	
-			<p class="clearfix">
-				<span class="pull-left">
-					<small class="mr-sm">
-						Noticia por:
-						<span>
-							{{article.user.displayName}} 
-						</span>
+				<img  width:"auto" ng-src="{{article.image}}"  class="img-thumbnail user-profile-picture" style="width:100%">	
+				<p class="clearfix">
+					<span class="pull-left">
+						<small class="mr-sm">
+							
+							<span>
+								Publicado en {{article.created | date:'mediumDate'}} por {{article.user.displayName}} 
+							</span>
 
-					</small>
-					<small class="mr-sm">
-						| Fecha de publicación
-						<span >
-							{{article.created | date:'mediumDate'}}
-						</span>
-					</small>
-				</span>
-			</p>
-			
-			<a data-ng-href="#!/articles/{{article._id}}">
-				<h2>
-					{{article.title}}
-				</h2>
-			</a>
-			
-			<p>
-				{{article.content}}
-			</p>
+						</small>
+					</span>
+				</p>
+				<a data-ng-href="#!/articles/{{article._id}}">
+					<h2>
+						{{article.title}}
+					</h2>
+				</a>
+				<p>
+					{{article.content}}
+				</p>
 			</br>
-
-			<!-- Inician Butones para social media -->
 			<div role="group"  class="btn-group">
 				<a  data-ng-href="http://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost:3000/#!/articles/{{article._id}}" type="button" class="btn btn-default">
 					<em class="fa fa-facebook text-muted"></em>
@@ -81,11 +70,7 @@
 					<em class="fa fa-share-alt text-muted"></em>
 				</a>
 			</div>
-			<!-- Terminan Butones para social media -->
-
 			<hr>
-			
-			<!-- Inician comentarios -->
 			<div class="panel-body">
 				<div class="media">
 					<div class="media-left">
@@ -138,8 +123,6 @@
 					</div>
 				</div>
 			</div>
-			<!-- Terminan comentarios -->
-
 			<hr>
 		</div>
 	</div>
@@ -150,8 +133,8 @@
 <!-- Post Bonito -->
 
 
-<h4 class="alert alert-purple text-center pv-lg" data-ng-if="articles.$resolved && !articles.length">
-	No articles yet, why don't you <a href="/#!/articles/create" class="text-yellow">create one</a>?
-</h4>
+	<h4 class="alert alert-purple text-center pv-lg" data-ng-if="articles.$resolved && !articles.length">
+		No articles yet, why don't you <a href="/#!/articles/create" class="text-yellow">create one</a>?
+	</h4>
 
 </section>
