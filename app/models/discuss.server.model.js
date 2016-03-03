@@ -21,10 +21,9 @@ var DiscussSchema = new Schema({
 		type: Schema.ObjectId,
 		ref: 'User'
 	},
-	
 	article: {
 		type: Schema.ObjectId,
-		ref: 'article'
+		ref: 'Article'
 	}
 });
 
