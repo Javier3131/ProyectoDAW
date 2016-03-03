@@ -8,7 +8,7 @@ angular.module('articles').config(['$stateProvider',
 		state('app.listArticles', {
 			url: '/articles',
 			title: 'List Articles',
-			templateUrl: 'modules/articles/views/list-articles.client.view.html'
+			templateUrl: 'modules/articles/views/list2-articles.client.view.html'
 		}).
 		state('app.createArticle', {
 			url: '/articles/create',

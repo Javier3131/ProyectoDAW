@@ -15,6 +15,11 @@ var ComentarioSchema = new Schema({
 		ref: 'User'
 	},
 
+	article: {
+		type: Schema.ObjectId,
+		ref: 'Article'
+	},
+
 	comment: {
 		type: String,
 		default: '',

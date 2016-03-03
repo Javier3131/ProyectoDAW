@@ -1,6 +1,6 @@
 'use strict';
 
-//Original del template.
+
 angular.module('comentario').controller('ComentarioController', ['$scope', '$stateParams', '$timeout', '$window','$location', 'Authentication', 'Comentario', 'FileUploader',
 	function($scope, $stateParams, $timeout,  $window, $location, Authentication, Comentario, FileUploader) {
 
@@ -17,12 +17,14 @@ angular.module('comentario').controller('ComentarioController', ['$scope', '$sta
 			var comentario = new Comentario({
 
 				comment: this.comment,
+				article: this.article
 				// image: this.imageURL
 			});
 			
 			comentario.$save(function(response) {
 				$location.path('comentario/' + response._id);
 				$scope.comment = '';
+				$scope.article = '';
 				
 
 			}, function(errorResponse) {
