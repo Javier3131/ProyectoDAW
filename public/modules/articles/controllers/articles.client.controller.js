@@ -1,5 +1,5 @@
 'use strict';
-//testing
+
 //Original del template.
 angular.module('articles').controller('ArticlesController', ['$scope', '$stateParams', '$timeout', '$window','$location', 'Authentication', 'Articles', 'FileUploader','Categoria',
 	function($scope, $stateParams, $timeout,  $window, $location, Authentication, Articles, FileUploader, Categoria) {
@@ -17,8 +17,8 @@ angular.module('articles').controller('ArticlesController', ['$scope', '$statePa
 
 				title: this.title,
 				content: this.content,
-				image: this.imageURL
-				// categoria: this.categoria
+				image: this.imageURL,
+				categoria: this.categoria
 			});
 
 			
@@ -78,8 +78,6 @@ angular.module('articles').controller('ArticlesController', ['$scope', '$statePa
 		    ],
 		   };
 
-		   // Javier Editando
-
 
 
 		// Called after the user selected a new picture file
@@ -91,8 +89,8 @@ angular.module('articles').controller('ArticlesController', ['$scope', '$statePa
 	        fileReader.onload = function (fileReaderEvent) {
 	          $timeout(function () {
 	            $scope.imageURL = fileReaderEvent.target.result;
-	            // console.log('$scope.imageURL ' + $scope.imageURL);
-	            // console.log('probando la categoria ' + this.option.id);
+	            console.log('$scope.imageURL ' + $scope.imageURL);
+	            console.log('probando la categoria ' + this.option.id);
 
 	            $scope.findCat();//Para buscar categorias
 
