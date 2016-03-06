@@ -29,7 +29,8 @@ module.exports = function() {
 				username: profile.username,
 				provider: 'twitter',
 				providerIdentifierField: 'id_str',
-				providerData: providerData
+				providerData: providerData,
+				profileImageURL: profile.photos[0].value.replace('normal', 'bigger')
 			};
 
 			// Save the user OAuth profile
