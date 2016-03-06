@@ -82,8 +82,6 @@ angular.module('articles').controller('ArticlesController', ['$scope', '$statePa
 		    ],
 		   };
 
-		   // Javier Editando
-
 
 
 		// Called after the user selected a new picture file

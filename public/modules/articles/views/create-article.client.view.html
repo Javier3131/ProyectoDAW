@@ -1,78 +1,79 @@
 <!-- Copiado del base de angle, propio del template -->
 <h3>Nueva Noticia
-    <ul class="breadcrumb">
-      <li><a ui-sref="app.home">Inicio</a>
-      </li>
-      <li ng-repeat="state in $state.$current.path" ng-switch="$last" ng-if="!state.abstract" ng-class="{active: $last}"><a ng-switch-when="false" href="#{{state.url.format($stateParams)}}">{{state.title}}</a>
-         <span ng-switch-when="true">{{state.title}}</span>
-      </li>
-    </ul>
+	<ul class="breadcrumb">
+		<li><a ui-sref="app.home">Inicio</a>
+		</li>
+		<li ng-repeat="state in $state.$current.path" ng-switch="$last" ng-if="!state.abstract" ng-class="{active: $last}"><a ng-switch-when="false" href="#{{state.url.format($stateParams)}}">{{state.title}}</a>
+			<span ng-switch-when="true">{{state.title}}</span>
+		</li>
+	</ul>
 </h3>
 <section data-ng-controller="ArticlesController">
-    <div class="col-md-12">
-        <form name="articleForm" class="form-horizontal" data-ng-submit="create()" novalidate>
-            <fieldset>
-                <div class="form-group" ng-class="{ 'has-error': articleForm.title.$dirty && articleForm.title.$invalid }">
-                    <label class="control-label" for="title">Titulo</label>
-                    <div class="controls">
-                        <input name="title" type="text" data-ng-model="title" id="title" class="form-control" placeholder="Title" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="content">Contenido</label>
-                    <div class="controls">
-                        <textarea name="content" data-ng-model="content" id="content" class="form-control" cols="30" rows="10" placeholder="Content"></textarea>
-                    </div>
-                </div>
-                <br />
-
-                
-                
-                    
-
-
-                    <select name="repeatSelect" id="repeatSelect" ng-model="data.repeatSelect">
-                        <option ng-repeat="option in data.availableOptions" value="{{option.name}}">
-                            {{option.name}}
-                        </option>
-                    </select>
-                    <!-- <tt data-ng-model="categoria">repeatSelect = {{data.repeatSelect}}</tt><br/> -->
-
-
-
-                    <!-- <select name="repeatSelect" id="repeatSelect" ng-model="categoria">
-                        <option 
-                            ng-repeat="option in categoria" value="{{option.title}}">
-                                {{option.title}}
-                        </option>
-                    </select> -->
-
-                        <!-- Javier Editando -->
-                     
-                
-
-
-
-                <br />
-                <input type="file" nv-file-select uploader="uploader" /><br/>
-                
-                <div class="form-group text-center">
-                    <img ng-src="{{imageURL}}"  class="img-thumbnail user-profile-picture">
-                    <div style="margin-bottom:20px; display:block"></div>
-                </div>
-
-
-                
-
-                
-
-                <div class="form-group mt">
-                    <input type="submit" class="btn btn-default" >
-                </div>
-                <div data-ng-show="error" class="text-danger">
-                    <strong data-ng-bind="error"></strong>
-                </div>
-            </fieldset>
-        </form>
-    </div>
+	<div class="panel">
+		<div class="panel-body">
+			<div class="col-md-12">
+				<form name="articleForm" class="form-horizontal" data-ng-submit="create()" novalidate>
+					<!-- <fieldset> -->
+						<div class="form-group" ng-class="{ 'has-error': articleForm.title.$dirty && articleForm.title.$invalid }">
+							<label class="control-label" for="title">Titulo</label>
+							<div class="controls">
+								<input name="title" type="text" data-ng-model="title" id="title" class="form-control"  required>
+							</div>
+						</div>
+						</br>
+						<div class="form-group">
+							<label class="control-label" for="content">Contenido</label>
+							<div class="controls">
+								<textarea name="content" data-ng-model="content" id="content" class="form-control" cols="30" rows="10"></textarea>
+							</div>
+						</div>
+						<br />
+						<!-- <div class="form-group"> <label class="control-label"> Categoría</label>
+							<select name="repeatSelect" id="repeatSelect" ng-model="data.repeatSelect">
+								<option ng-repeat="option in data.availableOptions" value="{{option.name}}">
+									{{option.name}}
+								</option>
+							</select>
+						</div>
+						</br> 
+						<div class="form-group">
+							<label for="exampleInputFile">Subir Imagen</label>
+							<input type="file" nv-file-select uploader="uploader" />
+							<p class="help-block">Example block-level help text here.</p>
+						</div> -->
+						<div class="form-group text-center">
+							<img ng-src="{{imageURL}}"  style="width:100%">
+							<div style="margin-bottom:20px; display:block">
+							</div>
+						</div>
+						</br> 
+						<div class="row">
+							<div class="col-xs-6 col-sm-3">
+								<div class="form-group"> <label class="control-label"> Categoría</label>
+									<select name="repeatSelect" id="repeatSelect" ng-model="data.repeatSelect">
+										<option ng-repeat="option in data.availableOptions" value="{{option.name}}">
+											{{option.name}}
+										</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-xs-6 col-sm-3">
+								<label for="exampleInputFile">Subir Imagen</label>
+								<input type="file" nv-file-select uploader="uploader" />
+								<!-- <p class="help-block">Example block-level help text here.</p> -->
+							</div>
+						</div>
+						</br>
+						<hr>
+						<div class="form-group mt" align="right">
+							<input type="submit" class="btn btn-info btn-lg"  value="Publicar Noticia">
+						</div>
+						<div data-ng-show="error" class="text-danger">
+							<strong data-ng-bind="error"></strong>
+						</div>
+					<!-- </fieldset> -->
+				</form>
+			</div>
+		</div>
+	</div>
 </section>
