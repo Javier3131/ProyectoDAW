@@ -13,18 +13,22 @@ angular.module('comentario').controller('ComentarioController', ['$scope', '$sta
 
 		// Propio del template. eq(index)
 		$scope.create = function() {
+
+			console.log('Aca en el client controller en el create');
+			console.log('this.article ' + this.article._id);
 			
 			var comentario = new Comentario({
 
 				comment: this.comment,
-				//article: this.article
+				// Si trae el json del article, hay que ver donde truena esto
+				article: this.article._id
 				// image: this.imageURL
 			});
 			
 			comentario.$save(function(response) {
 				$location.path('comentario/' + response._id);
 				$scope.comment = '';
-				$scope.article = '';
+				//$scope.article = '';
 				
 
 			}, function(errorResponse) {
@@ -52,7 +56,9 @@ angular.module('comentario').controller('ComentarioController', ['$scope', '$sta
 			});
 		};
 
-
+		$scope.findComentariosPorArticulo = function() {
+			$scope.comentario = Comentario.query();
+		};
 		
 	}
 ]);

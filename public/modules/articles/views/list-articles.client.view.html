@@ -82,7 +82,25 @@
 					
 
 					<div class="media-body">
-						<section data-ng-controller="ComentarioController">
+						<!-- El original y funcional. -->
+						<!-- <section data-ng-controller="ComentarioController"> -->
+						
+						<!-- El mio, probando -->
+						<section data-ng-controller="ComentarioController" data-ng-init="find()">
+
+						<!-- Javier Editando -->
+						<div class="panel-body" data-ng-repeat="comentario in comentario">
+							<small class="list-group-item-text">
+								Posted on
+								<span data-ng-bind="comentario.created | date:'mediumDate'"></span>
+								by
+								<span data-ng-bind="comentario.user.displayName"></span>
+							</small>
+							<h4 class="list-group-item-heading" data-ng-bind="comentario.comment"></h4>
+							<p class="list-group-item-text" data-ng-bind="comentario.content"></p>
+						</div>
+						<!-- Javier Editando -->
+
 						<div class="col-md-12">
 							<form name="comentarioForm" class="form-horizontal" data-ng-submit="create()" novalidate>
 								<fieldset>
@@ -108,6 +126,7 @@
 						</section>
 					</div>
 				</div>
+
 			</div>
 
 

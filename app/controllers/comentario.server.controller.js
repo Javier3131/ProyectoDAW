@@ -3,13 +3,24 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Comentario = mongoose.model('Comentario'),
+	
 	_ = require('lodash');
 
 
 
 exports.create = function(req, res) {
+	
+	
+	
+
+
 	var comentario = new Comentario(req.body);
 	comentario.user = req.user;
+
+	// Javier Probando
+	//  comentario.article = req.article;
+	// console.log('Aca en el controlador del server en create');
+	// console.log('comentario ' + comentario);
 
 	comentario.save(function(err) {
 		if (err) {
