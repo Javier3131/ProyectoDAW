@@ -48,6 +48,8 @@ angular.module('comentario').controller('ComentarioController', ['$scope', '$sta
 
 		$scope.find = function() {
 			$scope.comentario = Comentario.query();
+
+			console.log('$scope.comentario' + $scope.comentario);
 		};
 
 		$scope.findOne = function() {
