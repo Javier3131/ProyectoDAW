@@ -94,6 +94,7 @@
 							<img  width:"auto" ng-src="{{article.image}}"  class="img-thumbnail user-profile-picture" style="width:100%">	
 
 							<div ng-if="comentario.article == article._id">
+								article._id: {{article._id}}
 								<small class="list-group-item-text">
 								Posted on
 								<span data-ng-bind="comentario.created | date:'mediumDate'"></span>
