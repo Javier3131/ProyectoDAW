@@ -3,15 +3,15 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Comentario = mongoose.model('Comentario'),
-	
+
 	_ = require('lodash');
 
 
 
 exports.create = function(req, res) {
-	
-	
-	
+
+
+
 
 
 	var comentario = new Comentario(req.body);
@@ -85,7 +85,7 @@ exports.list = function(req, res) {
 };
 
 exports.comentarioByID = function(req, res, next, id) {
-	Comentario.findById(id).populate('user', 'displayName').exec(function(err, comentario) {
+	Comentario.findById(id).populate('user', 'displayName, profileImageURL').exec(function(err, comentario) {
 		if (err) return next(err);
 		if (!comentario) return next(new Error('Error al cargar comentario ' + id));
 		req.comentario = comentario;

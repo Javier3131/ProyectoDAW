@@ -10,28 +10,28 @@
 	</ul>
 </h3>
 <section data-ng-controller="ArticlesController" data-ng-init="find()">
-	
-	
+
+
 	<div class="form-group">
 		<label>
-			Buscar Noticia: 
+			Buscar Noticia:
 			<input ng-model="searchText">
 		</label>
 	</div>
-	
+
 	<!-- Empieza la modificacion del post -->
 	<div class="panel">
-			
-		
-			
+
+
+
 		<div class="panel-body" data-ng-repeat="article in articles | filter:searchText" data-ng-href="#!/articles/{{article._id}}" >
-				<img  width:"auto" ng-src="{{article.image}}"  class="img-thumbnail user-profile-picture" style="width:100%">	
+				<img  width:"auto" ng-src="{{article.image}}"  class="img-thumbnail user-profile-picture" style="width:100%">
 				<p class="clearfix">
 					<span class="pull-left">
 						<small class="mr-sm">
-							
+
 							<span>
-								Publicado en {{article.created | date:'mediumDate'}} por {{article.user.displayName}} 
+								Publicado en {{article.created | date:'mediumDate'}} por {{article.user.displayName}}
 							</span>
 
 						</small>
@@ -68,8 +68,8 @@
 			</div>
 			<hr>
 
-			
-			
+
+
 			<div class="panel-body">
 
 				<div class="media">
@@ -83,7 +83,7 @@
 					<div class="media-body">
 						<!-- El original y funcional. -->
 						<!-- <section data-ng-controller="ComentarioController"> -->
-						
+
 
 						<section data-ng-controller="ComentarioController" data-ng-init="find()">
 						 <!-- comentario.article: {{comentario.article}} -->
@@ -91,7 +91,7 @@
 						<!-- Javier Editando -->
 						<!-- <div class="panel-body" data-ng-repeat="comentario in comentario"> -->
 						<div class="panel-body" data-ng-repeat="comentario in comentario">
-							
+							<img  width:"auto" ng-src="{{article.image}}"  class="img-thumbnail user-profile-picture" style="width:100%">	
 
 							<div ng-if="comentario.article == article._id">
 								<small class="list-group-item-text">
@@ -103,7 +103,7 @@
 								<h4 class="list-group-item-heading" data-ng-bind="comentario.comment"></h4>
 								<p class="list-group-item-text" data-ng-bind="comentario.content"></p>
 							</div>
-							
+
 							<!-- Funciona normal -->
 							<!-- <small class="list-group-item-text">
 								Posted on
@@ -121,14 +121,14 @@
 								<fieldset>
 								<div class="form-group" ng-class="{ 'has-error': comentarioForm.Comment.$dirty && comentarioForm.comment.$invalid }">
 								<h4 id="media-heading" class="media-heading" data-ng-bind="authentication.user.displayName" class="ng-binding">
-								
+
 								</a>
 								</h4>
 										<div class="controls">
 											<input name="comment" type="text" data-ng-model="comment" id="comment" class="form-control" placeholder="Comment" required>
 										</div>
 									</div>
-									
+
 									<div class="form-group mt">
 										<input type="submit" class="btn btn-primary">
 									</div>
