@@ -9,9 +9,9 @@ var mongoose = require('mongoose'),
 	_ = require('lodash'),
 	multiparty = require('multiparty'),
 	uuid = require('uuid'),
-	// Agregando funcion bajada de stackoverflow 
+	// Agregando funcion bajada de stackoverflow
 	fs = require('fs'),
-	// Agregando funcion bajada de stackoverflow 
+	// Agregando funcion bajada de stackoverflow
 	Categoria = mongoose.model('Categoria');
 
 /**
@@ -183,7 +183,3 @@ exports.listCat = function(req, res) {
 		}
 	});
 };
-
-
-
-

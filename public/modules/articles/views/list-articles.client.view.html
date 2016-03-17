@@ -68,82 +68,57 @@
 			</div>
 			<hr>
 
+			
+			<div data-ng-controller="ComentarioController">
+				<div class="panel-body" data-ng-init="find()">
+					<div data-ng-repeat="comentario in comentario">
+						<div ng-if="comentario.article == article._id">
 
-
-			<div class="panel-body">
-
-				<div class="media">
-					<div class="media-left">
-						<a href="#">
-							<img ng-src="{{authentication.user.profileImageURL}}" class="media-object img-circle thumb64">
-						</a>
-					</div>
-
-
-					<div class="media-body">
-						<!-- El original y funcional. -->
-						<!-- <section data-ng-controller="ComentarioController"> -->
-
-
-						<section data-ng-controller="ComentarioController" data-ng-init="find()">
-						 <!-- comentario.article: {{comentario.article}} -->
-
-						<!-- Javier Editando -->
-						<!-- <div class="panel-body" data-ng-repeat="comentario in comentario"> -->
-						<div class="panel-body" data-ng-repeat="comentario in comentario">
-							<img  width:"auto" ng-src="{{article.image}}"  class="img-thumbnail user-profile-picture" style="width:100%">	
-
-							<div ng-if="comentario.article == article._id">
-								<small class="list-group-item-text">
-								Posted on
-								<span data-ng-bind="comentario.created | date:'mediumDate'"></span>
-								by
-								<span data-ng-bind="comentario.user.displayName"></span>
-								</small>
-								<h4 class="list-group-item-heading" data-ng-bind="comentario.comment"></h4>
-								<p class="list-group-item-text" data-ng-bind="comentario.content"></p>
+							<div class="media">
+								<div class="media-left">
+									<a href="#">
+										<img ng-src="{{comentario.user.profileImageURL}}" class="media-object img-circle thumb64">
+									</a>
+								</div>
+								<div class="media-body">
+									<small class="list-group-item-text">
+										Posteado el
+										<span data-ng-bind="comentario.created | date:'mediumDate'"></span>
+										por
+										<span data-ng-bind="comentario.user.displayName"></span>
+									</small>
+									<h4 class="list-group-item-heading" data-ng-bind="comentario.comment"></h4>
+								</div>
 							</div>
 
-							<!-- Funciona normal -->
-							<!-- <small class="list-group-item-text">
-								Posted on
-								<span data-ng-bind="comentario.created | date:'mediumDate'"></span>
-								by
-								<span data-ng-bind="comentario.user.displayName"></span>
-							</small>
-							<h4 class="list-group-item-heading" data-ng-bind="comentario.comment"></h4>
-							<p class="list-group-item-text" data-ng-bind="comentario.content"></p> -->
 						</div>
-						<!-- Javier Editando -->
-
-						<div class="col-md-12">
-							<form name="comentarioForm" class="form-horizontal" data-ng-submit="create()" novalidate>
-								<fieldset>
-								<div class="form-group" ng-class="{ 'has-error': comentarioForm.Comment.$dirty && comentarioForm.comment.$invalid }">
-								<h4 id="media-heading" class="media-heading" data-ng-bind="authentication.user.displayName" class="ng-binding">
-
-								</a>
-								</h4>
-										<div class="controls">
-											<input name="comment" type="text" data-ng-model="comment" id="comment" class="form-control" placeholder="Comment" required>
-										</div>
-									</div>
-
-									<div class="form-group mt">
-										<input type="submit" class="btn btn-primary">
-									</div>
-									<div data-ng-show="error" class="text-danger">
-										<strong data-ng-bind="error"></strong>
-									</div>
-								</fieldset>
-							</form>
-						</div>
-						</section>
 					</div>
 				</div>
 
-			</div>
+				<div class="col-md-12">
+					<form name="comentarioForm" class="form-horizontal" data-ng-submit="create()" novalidate>
+						<fieldset>
+						<div class="form-group" ng-class="{ 'has-error': comentarioForm.Comment.$dirty && comentarioForm.comment.$invalid }">
+						<h4 id="media-heading" class="media-heading" class="ng-binding">
 
+						</a>
+						</h4>
+								<div class="controls">
+									<input name="comment" type="text" data-ng-model="comment" id="comment" class="form-control" placeholder="Comment" required>
+								</div>
+						</div>
+
+							<div class="form-group mt">
+								<input type="submit" class="btn btn-primary">
+							</div>
+							<div data-ng-show="error" class="text-danger">
+								<strong data-ng-bind="error"></strong>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+
+			</div>
 
 			<hr>
 		</div>

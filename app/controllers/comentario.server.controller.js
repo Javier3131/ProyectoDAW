@@ -73,19 +73,21 @@ exports.delete = function(req, res) {
 };
 
 exports.list = function(req, res) {
-	Comentario.find().sort('-created').populate('user', 'displayName').exec(function(err, comentario) {
+	Comentario.find().sort('-created').populate('user').exec(function(err, comentario) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
+			console.log('comentario ' + comentario);
 			res.json(comentario);
 		}
 	});
 };
 
 exports.comentarioByID = function(req, res, next, id) {
-	Comentario.findById(id).populate('user', 'displayName, profileImageURL').exec(function(err, comentario) {
+	// Comentario.findById(id).populate('user', 'displayName, profileImageURL').exec(function(err, comentario) {
+	Comentario.findById(id).populate('user', 'displayName').exec(function(err, comentario) {
 		if (err) return next(err);
 		if (!comentario) return next(new Error('Error al cargar comentario ' + id));
 		req.comentario = comentario;
